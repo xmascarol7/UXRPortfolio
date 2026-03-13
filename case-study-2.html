@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Integrity Measurement — Bryan Carroll</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=DM+Serif+Display&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:           #FAFAFA;
+      --bg-2:         #F4F4F5;
+      --bg-3:         #EBEBED;
+      --text-1:       #111827;
+      --text-2:       #4B5563;
+      --text-3:       #9CA3AF;
+      --accent:       #1D4ED8;
+      --accent-light: #EFF6FF;
+      --accent-mid:   #BFDBFE;
+      --border:       #E5E7EB;
+      --nav-w:        260px;
+      --serif:        'DM Serif Display', Georgia, serif;
+      --sans:         'Inter', system-ui, sans-serif;
+      --radius:       12px;
+      --transition:   0.2s ease;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--sans);
+      background: var(--bg);
+      color: var(--text-1);
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* ── SIDEBAR ─────────────────────────────────── */
+    nav#sidebar {
+      position: fixed; top: 0; left: 0;
+      width: var(--nav-w); height: 100vh;
+      background: #fff; border-right: 1px solid var(--border);
+      display: flex; flex-direction: column;
+      padding: 48px 32px; z-index: 100; gap: 0;
+    }
+    .nav-identity { margin-bottom: 48px; }
+    .nav-identity .role {
+      font-size: 0.75rem; font-weight: 500; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--text-3); margin-top: 6px;
+    }
+    .nav-section-label {
+      font-size: 0.65rem; font-weight: 600; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--text-3); margin-bottom: 12px;
+    }
+    .nav-links { list-style: none; margin-bottom: 36px; }
+    .nav-links li + li { margin-top: 2px; }
+    .nav-links a {
+      display: block; font-size: 0.875rem; font-weight: 400;
+      color: var(--text-2); text-decoration: none;
+      padding: 7px 12px; border-radius: 8px;
+      transition: background var(--transition), color var(--transition);
+    }
+    .nav-links a:hover, .nav-links a.active { background: var(--accent-light); color: var(--accent); }
+    .nav-links a.active { font-weight: 500; }
+    .nav-divider { height: 1px; background: var(--border); margin-bottom: 36px; }
+    .nav-footer { margin-top: auto; display: flex; flex-direction: column; gap: 12px; }
+    .nav-footer a { font-size: 0.8rem; color: var(--text-3); text-decoration: none; transition: color var(--transition); }
+    .nav-footer a:hover { color: var(--accent); }
+
+    /* ── MAIN ────────────────────────────────────── */
+    main { margin-left: var(--nav-w); flex: 1; max-width: 900px; padding: 80px 64px 120px; }
+
+    /* ── TYPOGRAPHY ──────────────────────────────── */
+    h2 { font-family: var(--serif); font-size: clamp(1.75rem, 3vw, 2.25rem); line-height: 1.2; color: var(--text-1); margin-bottom: 20px; }
+    h3 { font-size: 1rem; font-weight: 600; color: var(--text-1); margin-bottom: 10px; }
+    p { font-size: 0.9375rem; line-height: 1.75; color: var(--text-2); }
+    p + p { margin-top: 14px; }
+    strong { color: var(--text-1); font-weight: 600; }
+
+    /* ── BACK LINK ───────────────────────────────── */
+    .back-link {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 0.8rem; color: var(--text-3); text-decoration: none;
+      margin-bottom: 32px; transition: color var(--transition);
+    }
+    .back-link:hover { color: var(--accent); }
+
+    /* ── CASE HERO ───────────────────────────────── */
+    .case-hero {
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 48px 56px;
+      display: grid; grid-template-columns: 1fr 220px;
+      gap: 40px; align-items: center; margin-bottom: 0;
+    }
+    .company-tag {
+      display: inline-block; font-size: 0.65rem; font-weight: 700;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--accent); background: var(--accent-light);
+      padding: 4px 10px; border-radius: 999px; margin-bottom: 16px;
+    }
+    .method-pills { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+    .method-pill {
+      font-size: 0.75rem; font-weight: 500;
+      padding: 5px 12px; border-radius: 999px;
+      border: 1px solid var(--border); color: var(--text-2);
+    }
+
+    /* ── CONTENT CARD ────────────────────────────── */
+    .content-card {
+      background: #fff; border: 1px solid var(--border); border-top: none;
+      border-radius: 0 0 var(--radius) var(--radius); padding: 56px;
+    }
+
+    /* ── SECTION SPACING ─────────────────────────── */
+    .case-section { margin-bottom: 48px; }
+    .case-section:last-child { margin-bottom: 0; }
+    .section-divider { height: 1px; background: var(--border); margin: 48px 0; }
+    .section-eyebrow {
+      font-size: 0.65rem; font-weight: 700; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--accent); margin-bottom: 10px;
+    }
+
+    /* ── HIGHLIGHT BOX ───────────────────────────── */
+    .highlight-box {
+      background: var(--accent-light); border-left: 3px solid var(--accent);
+      border-radius: 0 8px 8px 0; padding: 16px 20px; margin: 20px 0;
+    }
+    .highlight-box p { color: var(--text-1); font-size: 0.875rem; }
+
+    /* ── STAT ROW ────────────────────────────────── */
+    .stat-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 16px; margin: 24px 0; }
+    .stat-box { background: var(--bg-2); border-radius: 10px; padding: 20px; text-align: center; }
+    .stat-number { font-family: var(--serif); font-size: 2rem; color: var(--text-1); line-height: 1; margin-bottom: 6px; }
+    .stat-label { font-size: 0.75rem; color: var(--text-3); font-weight: 500; line-height: 1.3; }
+
+    /* ── PHASE GRID ──────────────────────────────── */
+    .phase-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 20px 0; }
+    .phase-box { background: var(--bg-2); border-radius: 10px; padding: 20px 24px; }
+    .phase-label { font-size: 0.65rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 8px; }
+    .phase-box p { font-size: 0.85rem; }
+
+    /* ── FINDINGS LIST ───────────────────────────── */
+    .findings-list { list-style: none; margin: 16px 0; }
+    .findings-list li {
+      padding: 14px 0; border-bottom: 1px solid var(--border);
+      display: flex; gap: 14px; font-size: 0.875rem; color: var(--text-2); line-height: 1.6;
+    }
+    .findings-list li:last-child { border-bottom: none; }
+    .find-icon { font-size: 1rem; flex-shrink: 0; margin-top: 2px; }
+
+    /* ── ROLE LIST ───────────────────────────────── */
+    .role-list { margin: 16px 0; display: flex; flex-direction: column; gap: 8px; }
+    .role-item { display: flex; gap: 10px; align-items: flex-start; font-size: 0.875rem; color: var(--text-2); line-height: 1.6; }
+    .role-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); flex-shrink: 0; margin-top: 8px; }
+
+    /* ── ACCORDION ───────────────────────────────── */
+    .accordion { border: 1px solid var(--border); border-radius: 10px; margin-top: 16px; overflow: hidden; }
+    .accordion + .accordion { margin-top: 10px; }
+    .accordion-trigger {
+      width: 100%; display: flex; align-items: center; justify-content: space-between;
+      gap: 16px; padding: 16px 20px; background: var(--bg-2);
+      border: none; cursor: pointer; text-align: left;
+      transition: background var(--transition);
+    }
+    .accordion-trigger:hover { background: var(--bg-3); }
+    .accordion-trigger[aria-expanded="true"] { background: var(--accent-light); }
+    .accordion-label { font-size: 0.825rem; font-weight: 500; color: var(--text-1); }
+    .accordion-sublabel { font-size: 0.75rem; color: var(--text-3); margin-top: 2px; }
+    .accordion-text { flex: 1; }
+    .accordion-icon {
+      width: 26px; height: 26px; border-radius: 50%;
+      border: 1.5px solid var(--border); background: #fff;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem; line-height: 1; flex-shrink: 0; color: var(--text-2);
+      transition: transform 0.25s ease, background var(--transition), border-color var(--transition), color var(--transition);
+    }
+    .accordion-trigger[aria-expanded="true"] .accordion-icon {
+      transform: rotate(45deg);
+      background: var(--accent-light); border-color: var(--accent); color: var(--accent);
+    }
+    .accordion-body { max-height: 0; overflow: hidden; transition: max-height 0.35s ease; }
+    .accordion-body-inner { padding: 24px 20px; border-top: 1px solid var(--border); }
+    .accordion-body-inner p { font-size: 0.875rem; }
+    .accordion-body-inner p + p { margin-top: 12px; }
+
+    /* ── FACTOR MAP ──────────────────────────────── */
+    .factor-map { margin: 24px 0; }
+    .factor-columns { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+    .factor-column {
+      border: 1px solid var(--border); border-radius: 10px; overflow: hidden;
+    }
+    .factor-header {
+      background: var(--accent); color: #fff;
+      padding: 12px 16px; font-size: 0.775rem; font-weight: 600;
+    }
+    .factor-items { padding: 12px 16px; display: flex; flex-direction: column; gap: 6px; }
+    .factor-item {
+      font-size: 0.775rem; color: var(--text-2); padding: 6px 10px;
+      background: var(--bg-2); border-radius: 6px; line-height: 1.4;
+    }
+    .factor-note {
+      border: 1px dashed var(--border); border-radius: 10px; overflow: hidden; margin-top: 12px;
+    }
+    .factor-note-header {
+      background: var(--bg-2); padding: 12px 16px;
+      font-size: 0.775rem; font-weight: 600; color: var(--text-3);
+      display: flex; align-items: center; gap: 8px;
+    }
+    .factor-note-body { padding: 12px 16px; }
+    .factor-note-body p { font-size: 0.825rem; }
+
+    /* ── ENGAGEMENT CHART ────────────────────────── */
+    .engagement-chart { margin: 24px 0; }
+    .engagement-timeline {
+      border: 1px solid var(--border); border-radius: 10px; overflow: hidden;
+    }
+    .timeline-header { background: var(--bg-2); padding: 16px 20px; border-bottom: 1px solid var(--border); }
+    .timeline-header p { font-size: 0.775rem; color: var(--text-2); }
+    .timeline-body { padding: 20px; display: flex; align-items: stretch; gap: 0; }
+    .timeline-col { flex: 1; text-align: center; position: relative; }
+    .timeline-col + .timeline-col { border-left: 1px dashed var(--border); }
+    .timeline-period { font-size: 0.65rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-3); margin-bottom: 16px; }
+    .timeline-bar-wrap { display: flex; justify-content: center; align-items: flex-end; height: 80px; margin-bottom: 10px; }
+    .timeline-bar { width: 48px; border-radius: 4px 4px 0 0; }
+    .bar-baseline { background: var(--accent-mid); }
+    .bar-after    { background: var(--accent); }
+    .timeline-value { font-family: var(--serif); font-size: 1.4rem; color: var(--text-1); }
+    .timeline-desc { font-size: 0.75rem; color: var(--text-3); line-height: 1.4; margin-top: 4px; }
+    .timeline-arrow { display: flex; align-items: center; padding: 0 12px; color: var(--accent); font-size: 1.2rem; }
+
+    /* ── R² COMPARISON CHART ─────────────────────── */
+    .rsq-chart { margin: 24px 0; }
+    .rsq-bars { display: flex; flex-direction: column; gap: 14px; }
+    .rsq-row { display: grid; grid-template-columns: 180px 1fr 70px; align-items: center; gap: 14px; }
+    .rsq-label { font-size: 0.8rem; color: var(--text-2); text-align: right; }
+    .rsq-track { height: 32px; background: var(--bg-2); border-radius: 6px; position: relative; overflow: hidden; }
+    .rsq-fill {
+      position: absolute; top: 0; left: 0; height: 100%; border-radius: 6px;
+      display: flex; align-items: center; padding-left: 12px;
+      font-size: 0.75rem; font-weight: 600; color: #fff;
+    }
+    .rsq-fill.near-zero {
+      width: 4px !important; padding: 0;
+    }
+    .rsq-value { font-size: 0.85rem; font-weight: 600; color: var(--text-1); }
+
+    /* ── DETAIL TABLE ────────────────────────────── */
+    .detail-table { width: 100%; border-collapse: collapse; font-size: 0.825rem; margin-top: 12px; }
+    .detail-table th { text-align: left; font-size: 0.65rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-3); padding: 8px 12px; border-bottom: 1px solid var(--border); }
+    .detail-table td { padding: 10px 12px; border-bottom: 1px solid var(--border); color: var(--text-2); vertical-align: top; line-height: 1.5; }
+    .detail-table tr:last-child td { border-bottom: none; }
+    .detail-table td:first-child { font-weight: 500; color: var(--text-1); white-space: nowrap; }
+
+    /* ── ANALYSIS NOTE ───────────────────────────── */
+    .analysis-note { background: var(--bg-2); border-radius: 8px; padding: 14px 16px; margin-top: 14px; }
+    .analysis-note p { font-size: 0.825rem; }
+
+    /* ── PILOT WARNING ───────────────────────────── */
+    .callout {
+      border: 1px solid var(--accent-mid); border-radius: 10px; padding: 20px 24px; margin: 20px 0;
+      background: var(--accent-light);
+    }
+    .callout-label { font-size: 0.65rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 8px; }
+    .callout p { font-size: 0.875rem; color: var(--text-1); }
+
+    /* ── REFLECTION BOX ──────────────────────────── */
+    .reflection-box { border: 1px solid var(--border); border-radius: 10px; padding: 28px 32px; }
+    .reflection-item { margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid var(--border); }
+    .reflection-item:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
+    .reflection-label { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-3); margin-bottom: 6px; }
+    .reflection-item p { font-size: 0.875rem; }
+
+    /* ── MARKET CHIPS ────────────────────────────── */
+    .market-chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 14px 0; }
+    .market-chip {
+      font-size: 0.8rem; padding: 5px 12px; border-radius: 999px;
+      border: 1px solid var(--border); color: var(--text-2); background: #fff;
+    }
+  </style>
+</head>
+<body>
+
+  <nav id="sidebar">
+    <div class="nav-identity">
+      <a href="index.html" style="font-family:var(--serif);font-size:1.25rem;color:var(--text-1);text-decoration:none;line-height:1.2;display:block;">Bryan Carroll</a>
+      <div class="role">UX Researcher</div>
+    </div>
+    <div class="nav-section-label">Work</div>
+    <ul class="nav-links">
+      <li><a href="case-study-1.html">Business Verification</a></li>
+      <li><a href="case-study-2.html" class="active">Integrity Measurement</a></li>
+    </ul>
+    <div class="nav-divider"></div>
+    <div class="nav-section-label">About</div>
+    <ul class="nav-links">
+      <li><a href="index.html#about">About me</a></li>
+      <li><a href="index.html#resume">Résumé</a></li>
+      <li><a href="index.html#contact">Contact</a></li>
+    </ul>
+    <div class="nav-footer">
+      <a href="mailto:bryan@carroll-parker.me">bryan@carroll-parker.me</a>
+    </div>
+  </nav>
+
+  <main>
+    <a class="back-link" href="index.html">← Back to work</a>
+
+    <!-- HERO -->
+    <div class="case-hero">
+      <div>
+        <span class="company-tag">Meta · Trust &amp; Safety</span>
+        <h2>User-Centric Measurement<br>for Meta Integrity</h2>
+        <p style="font-size:0.9rem;color:var(--text-2);line-height:1.65;max-width:420px">Identified a misaligned north star metric, built the business case for change, and designed an end-to-end measurement programme — shifting an entire team's product strategy.</p>
+        <div class="method-pills">
+          <span class="method-pill">Factor Analysis (EFA)</span>
+          <span class="method-pill">Cognitive Testing</span>
+          <span class="method-pill">Stepwise Regression</span>
+          <span class="method-pill">ANOVA</span>
+          <span class="method-pill">Experiment Design</span>
+          <span class="method-pill">Engagement Analysis</span>
+        </div>
+      </div>
+      <svg viewBox="0 0 200 180" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <circle cx="100" cy="90" r="20" fill="#1D4ED8"/>
+        <line x1="100" y1="70"  x2="100" y2="32"  stroke="#BFDBFE" stroke-width="1.5"/>
+        <line x1="100" y1="110" x2="100" y2="153" stroke="#BFDBFE" stroke-width="1.5"/>
+        <line x1="82"  y1="80"  x2="46"  y2="56"  stroke="#BFDBFE" stroke-width="1.5"/>
+        <line x1="118" y1="80"  x2="154" y2="56"  stroke="#BFDBFE" stroke-width="1.5"/>
+        <line x1="82"  y1="102" x2="46"  y2="130" stroke="#BFDBFE" stroke-width="1.5"/>
+        <line x1="118" y1="102" x2="154" y2="130" stroke="#BFDBFE" stroke-width="1.5"/>
+        <circle cx="100" cy="28"  r="12" fill="#EFF6FF" stroke="#BFDBFE" stroke-width="1.5"/>
+        <circle cx="100" cy="156" r="12" fill="#EFF6FF" stroke="#BFDBFE" stroke-width="1.5"/>
+        <circle cx="42"  cy="52"  r="12" fill="#EFF6FF" stroke="#BFDBFE" stroke-width="1.5"/>
+        <circle cx="158" cy="52"  r="12" fill="#EFF6FF" stroke="#BFDBFE" stroke-width="1.5"/>
+        <circle cx="42"  cy="132" r="12" fill="#EFF6FF" stroke="#BFDBFE" stroke-width="1.5"/>
+        <circle cx="158" cy="132" r="12" fill="#EFF6FF" stroke="#BFDBFE" stroke-width="1.5"/>
+        <text x="100" y="32"  text-anchor="middle" font-size="7" fill="#1D4ED8" font-family="Inter,sans-serif" font-weight="600">Voice</text>
+        <text x="100" y="160" text-anchor="middle" font-size="7" fill="#1D4ED8" font-family="Inter,sans-serif" font-weight="600">Support</text>
+        <text x="42"  y="56"  text-anchor="middle" font-size="6" fill="#1D4ED8" font-family="Inter,sans-serif" font-weight="600">Trans.</text>
+        <text x="158" y="56"  text-anchor="middle" font-size="6" fill="#1D4ED8" font-family="Inter,sans-serif" font-weight="600">Clarity</text>
+        <text x="42"  y="136" text-anchor="middle" font-size="6" fill="#1D4ED8" font-family="Inter,sans-serif" font-weight="600">Ease</text>
+        <text x="158" y="136" text-anchor="middle" font-size="6" fill="#1D4ED8" font-family="Inter,sans-serif" font-weight="600">Fairness</text>
+        <text x="100" y="88"  text-anchor="middle" font-size="8" fill="#fff" font-family="Inter,sans-serif" font-weight="600">EFA</text>
+        <text x="100" y="98"  text-anchor="middle" font-size="6.5" fill="#BFDBFE" font-family="Inter,sans-serif">R²=.68</text>
+      </svg>
+    </div>
+
+    <div class="content-card">
+
+      <!-- CONTEXT -->
+      <div class="case-section">
+        <div class="section-eyebrow">Context</div>
+        <h3>The Team's North Star — and What Was Missing</h3>
+        <p>The Meta Integrity Experiences team designs front-end UIs for content enforcement, reporting, and support. Any time a user encountered harmful content or had content removed, they interacted with one of our interfaces.</p>
+        <p>Their north star metric was <strong>Positive Support Outcomes (PSOs)</strong> — a count of reports, unfollows, blocks, and hides. Roadmap prioritisation was therefore focused on discoverability: more entrypoints, less dropoff, more users reaching these tools.</p>
+
+        <div class="highlight-box">
+          <p>Through ongoing qualitative research, I consistently heard users say: <em>"It feels like Meta doesn't care about harmful content."</em> Report action rate was below 1% — meaning over 99% of reports resulted in no visible action from the user's perspective.</p>
+        </div>
+
+        <p>If the team's goal was increasing PSOs while those tools were leaving people deeply disappointed, we were likely optimising for the wrong thing entirely.</p>
+      </div>
+
+      <div class="section-divider"></div>
+
+      <!-- BUILDING THE CASE -->
+      <div class="case-section">
+        <div class="section-eyebrow">Business Case</div>
+        <h3>Connecting User Dissatisfaction to Business Goals</h3>
+        <p>User dissatisfaction alone wasn't enough to convince the PM to change the metric. I needed to translate the qualitative signal into a business impact that leadership could act on.</p>
+        <p>My hypothesis: people who feel that "Meta doesn't care" will be less likely to use Meta. Engagement — not PSOs — was what the business ultimately cared about.</p>
+
+        <div class="engagement-chart">
+          <div class="chart-title" style="font-size:0.75rem;font-weight:600;color:var(--text-2);margin-bottom:12px;letter-spacing:0.04em;text-transform:uppercase">Engagement impact after a "report ignored" outcome</div>
+          <p style="font-size:0.875rem;color:var(--text-2);line-height:1.7;margin-bottom:16px">I partnered with Data Science to pull engagement data (VPVs, likes, shares, comments) for each day in the two weeks before and after a user received a "report ignored" message — across a random sample of users with L1 global engagement.</p>
+          <svg viewBox="0 0 420 190" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:420px;display:block;margin:0 auto" aria-label="Line chart showing engagement drop after report ignored outcome">
+            <!-- grid lines -->
+            <line x1="60" y1="20"  x2="60"  y2="155" stroke="#E5E7EB" stroke-width="1"/>
+            <line x1="60" y1="155" x2="400" y2="155" stroke="#E5E7EB" stroke-width="1"/>
+            <line x1="60" y1="20"  x2="400" y2="20"  stroke="#E5E7EB" stroke-width="0.5" stroke-dasharray="3 3"/>
+            <line x1="60" y1="65"  x2="400" y2="65"  stroke="#E5E7EB" stroke-width="0.5" stroke-dasharray="3 3"/>
+            <line x1="60" y1="110" x2="400" y2="110" stroke="#E5E7EB" stroke-width="0.5" stroke-dasharray="3 3"/>
+            <!-- y-axis label -->
+            <text x="10" y="90" text-anchor="middle" font-size="9" fill="#9CA3AF" font-family="Inter,sans-serif" transform="rotate(-90,10,90)">Total engagement</text>
+            <!-- x-axis labels -->
+            <text x="100" y="170" text-anchor="middle" font-size="9" fill="#4B5563" font-family="Inter,sans-serif">−14 days</text>
+            <text x="230" y="170" text-anchor="middle" font-size="9" font-weight="600" fill="#4B5563" font-family="Inter,sans-serif">Day 0</text>
+            <text x="360" y="170" text-anchor="middle" font-size="9" fill="#4B5563" font-family="Inter,sans-serif">+14 days</text>
+            <!-- Day 0 vertical marker (event line) -->
+            <line x1="230" y1="20" x2="230" y2="155" stroke="#E5E7EB" stroke-width="1.5" stroke-dasharray="4 3"/>
+            <!-- Event label -->
+            <rect x="155" y="22" width="150" height="24" rx="4" fill="#FEF3C7"/>
+            <text x="230" y="38" text-anchor="middle" font-size="8.5" fill="#92400E" font-family="Inter,sans-serif" font-weight="600">⚠ "Report ignored" received</text>
+            <!-- Engagement line: flat until dotted line, then steep drop, then slight recovery -->
+            <polyline
+              points="100,50 230,50 238,120 360,105"
+              fill="none" stroke="#1D4ED8" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+            <!-- Shaded area under the drop -->
+            <polygon points="100,50 230,50 238,120 360,105 360,155 100,155" fill="#EFF6FF" opacity="0.5"/>
+            <!-- Data points -->
+            <circle cx="100" cy="50"  r="5" fill="#fff" stroke="#1D4ED8" stroke-width="2"/>
+            <circle cx="238" cy="120" r="5" fill="#1D4ED8"/>
+            <circle cx="360" cy="105" r="5" fill="#fff" stroke="#1D4ED8" stroke-width="2"/>
+            <!-- Value labels -->
+            <text x="100" y="43"  text-anchor="middle" font-size="9" fill="#4B5563" font-family="Inter,sans-serif">Baseline</text>
+            <text x="246" y="124" text-anchor="start"  font-size="9" fill="#1D4ED8" font-family="Inter,sans-serif" font-weight="600">−0.7%</text>
+            <text x="360" y="98"  text-anchor="middle" font-size="9" fill="#4B5563" font-family="Inter,sans-serif">Partial</text>
+            <text x="360" y="109" text-anchor="middle" font-size="9" fill="#4B5563" font-family="Inter,sans-serif">recovery</text>
+          </svg>
+        </div>
+
+        <div class="stat-row">
+          <div class="stat-box">
+            <div class="stat-number">−0.7%</div>
+            <div class="stat-label">Drop in engagement after a negative report outcome</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-number">18M</div>
+            <div class="stat-label">Daily reporters — making the scale significant</div>
+          </div>
+        </div>
+
+        <!-- ACCORDION: Stakeholder collaboration on building the case -->
+        <div class="accordion">
+          <button class="accordion-trigger" aria-expanded="false">
+            <div class="accordion-text">
+              <div class="accordion-label">Getting buy-in — working with PM and DS leadership</div>
+              <div class="accordion-sublabel">How the engagement analysis was designed and presented to drive change</div>
+            </div>
+            <div class="accordion-icon">+</div>
+          </button>
+          <div class="accordion-body">
+            <div class="accordion-body-inner">
+              <p>The initial PM response to the qualitative findings was essentially: "users are unhappy, but we don't know if that affects the business." The engagement analysis was designed to directly address that objection.</p>
+              <p style="margin-top:12px">I partnered with DS to design the analysis carefully — pulling a random sample of users with L1 engagement globally, isolating the "report ignored" message as the event, and measuring engagement in the two-week windows before and after. The goal was to make the causal story as clean as possible given observational data constraints.</p>
+              <p style="margin-top:12px">Presenting a 0.7% engagement drop across 18M daily reporters reframed the conversation: this wasn't a soft user satisfaction problem, it was a quantifiable drag on platform engagement at scale. That shift in framing was what opened the door to the PM agreeing to invest in a proper measurement programme.</p>
+              <p style="margin-top:12px">I was explicit about the limitations of the analysis — it was correlational, not causal — but argued that the prior qualitative evidence gave us reasonable confidence that the relationship was directional. The combination of qual signal + quant scale was sufficient to justify the investment.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-divider"></div>
+
+      <!-- APPROACH -->
+      <div class="case-section">
+        <div class="section-eyebrow">Approach</div>
+        <h3>Developing a Sentiment Measure</h3>
+        <p>I set out to develop a sentiment metric that captured the user experience of the integrity flow, and use it to identify a product proxy the team could goal on — all within a 3-month window ahead of H2 goal setting.</p>
+
+        <div class="phase-grid">
+          <div class="phase-box">
+            <div class="phase-label">Step 1 — Identify Factors</div>
+            <p>Analysed existing qualitative transcripts using text coding to identify 18 candidate UX driver items. Sanity-checked with product team, then operationalised each as a 5-point unipolar scale.</p>
+          </div>
+          <div class="phase-box">
+            <div class="phase-label">Step 2 — EFA Survey</div>
+            <p>Targeted global reporter population with sub-groups of ignored reporters and actioned reporters. Ran exploratory factor analysis to identify the underlying factor structure.</p>
+          </div>
+          <div class="phase-box">
+            <div class="phase-label">Step 3 — Cognitive Testing</div>
+            <p>Tested the instrument across 5 markets to ensure translation fidelity and scale usability. Made two key changes before piloting: word choice and scale format.</p>
+          </div>
+          <div class="phase-box">
+            <div class="phase-label">Step 4 — Pilot Experiment</div>
+            <p>Ran an in-product pilot to validate that the survey actually detected meaningful changes. Designed to eliminate alternative explanations for null results.</p>
+          </div>
+        </div>
+
+        <!-- ACCORDION: EFA methodology detail -->
+        <div class="accordion">
+          <button class="accordion-trigger" aria-expanded="false">
+            <div class="accordion-text">
+              <div class="accordion-label">EFA survey methodology detail</div>
+              <div class="accordion-sublabel">Survey design, sampling approach, quality checks, analysis decisions</div>
+            </div>
+            <div class="accordion-icon">+</div>
+          </button>
+          <div class="accordion-body">
+            <div class="accordion-body-inner">
+              <table class="detail-table">
+                <thead>
+                  <tr><th>Decision</th><th>Approach &amp; Rationale</th></tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Item generation</td>
+                    <td>Used text coding on existing qualitative transcripts to identify 18 candidate items that could drive the user experience. Reviewed with product team for face validity before operationalising.</td>
+                  </tr>
+                  <tr>
+                    <td>Scale format</td>
+                    <td>5-point unipolar scales for consistency across all 18 items. Randomised question order and flipped response scales on some items to reduce order effects and acquiescence bias.</td>
+                  </tr>
+                  <tr>
+                    <td>Target population</td>
+                    <td>Global reporter population. Sub-groups: users who received a "report ignored" message, and users who received a "report actioned" message — to allow comparison across outcome types.</td>
+                  </tr>
+                  <tr>
+                    <td>Sample size</td>
+                    <td>Assumed high communalities given qual grounding, settled on n=350 per item per group. Sample size was adequate to detect large factor loadings reliably.</td>
+                  </tr>
+                  <tr>
+                    <td>Data quality checks</td>
+                    <td>Straightlining detection; speed-run check (identified mean completion time, eliminated completions at ¼ mean); response distribution checks for outliers, skewness, kurtosis; checked for MAR vs MNAR patterns. Note: Meta does not allow attention checks on-platform.</td>
+                  </tr>
+                  <tr>
+                    <td>Factor analysis approach</td>
+                    <td>Worked with DS on EFA. Scree plot and parallel analysis both suggested 3 or 4 factors. On examination of item content, 4-factor solution aligned most closely with prior qual findings and was more interpretable.</td>
+                  </tr>
+                  <tr>
+                    <td>The Satisfaction factor</td>
+                    <td>One factor (Satisfaction) showed near-perfect correlation with report outcome — making it unsuitable as a metric since the team has no control over policy decisions. Excluded from the final measure. Remaining 3 factors retained.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-divider"></div>
+
+      <!-- FACTOR STRUCTURE -->
+      <div class="case-section">
+        <div class="section-eyebrow">Findings</div>
+        <h3>Factor Structure: Three Dimensions of "Supportiveness"</h3>
+        <p>EFA identified 4 factors. After excluding Satisfaction (which was almost perfectly predicted by report outcome, making it outside the team's control), the remaining three became the core sentiment measure.</p>
+
+        <div class="factor-map">
+          <div class="factor-columns">
+            <div class="factor-column">
+              <div class="factor-header">🔍 Transparency</div>
+              <div class="factor-items">
+                <div class="factor-item">Clearness of process</div>
+                <div class="factor-item">Clarity of decision</div>
+                <div class="factor-item">Clearness of communication</div>
+                <div class="factor-item">Clarity of policy</div>
+              </div>
+            </div>
+            <div class="factor-column">
+              <div class="factor-header">🗣️ Voice</div>
+              <div class="factor-items">
+                <div class="factor-item">Feeling listened to</div>
+                <div class="factor-item">Promptness</div>
+                <div class="factor-item">Understanding submitter's POV</div>
+                <div class="factor-item">Justification of decision</div>
+                <div class="factor-item">Fairness of procedure</div>
+              </div>
+            </div>
+            <div class="factor-column">
+              <div class="factor-header">⭐ Support</div>
+              <div class="factor-items">
+                <div class="factor-item">Due diligence done</div>
+                <div class="factor-item">Feeling listened to</div>
+                <div class="factor-item">Getting a response</div>
+                <div class="factor-item">Problem taken seriously</div>
+                <div class="factor-item">Empathy</div>
+              </div>
+            </div>
+          </div>
+          <div class="factor-note">
+            <div class="factor-note-header">
+              <span style="color:var(--text-3)">⚠</span> Excluded: Satisfaction factor
+            </div>
+            <div class="factor-note-body">
+              <p>A 4th factor (Satisfaction) included items like "problem resolved", "happiness with outcome", and "agreement with policy" — and was almost perfectly correlated with whether the report was actioned. Since the team has no control over policy enforcement decisions, this factor was excluded from the metric. The team cannot influence whether reports result in takedowns; they can influence how supported users feel throughout the process.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-divider"></div>
+
+      <!-- COGNITIVE TESTING -->
+      <div class="case-section">
+        <div class="section-eyebrow">Validation</div>
+        <h3>Cognitive Testing Across 5 Markets</h3>
+        <p>Before piloting the instrument in-product, I ran cognitive testing to ensure the questions were translating correctly and that users understood the scale format as intended.</p>
+
+        <div class="market-chips">
+          <span class="market-chip">🇹🇭 Thailand</span>
+          <span class="market-chip">🇮🇩 Indonesia</span>
+          <span class="market-chip">🇩🇪 Germany</span>
+          <span class="market-chip">🇹🇷 Turkey</span>
+          <span class="market-chip">🇧🇷 Brazil</span>
+        </div>
+
+        <!-- ACCORDION: Cognitive testing detail -->
+        <div class="accordion">
+          <button class="accordion-trigger" aria-expanded="false">
+            <div class="accordion-text">
+              <div class="accordion-label">Cognitive testing methodology and key changes</div>
+              <div class="accordion-sublabel">Market selection rationale, what changed and why</div>
+            </div>
+            <div class="accordion-icon">+</div>
+          </button>
+          <div class="accordion-body">
+            <div class="accordion-body-inner">
+              <p><strong>Market selection:</strong> I prioritised markets with the highest report volumes where I had the least internal team understanding of language nuances. Spanish was a larger language by speaker volume, but I had several native Spanish speakers on the team who could provide informal review — so I prioritised markets where that internal check wasn't available.</p>
+              <p style="margin-top:12px"><strong>Change 1 — "Supported" → "Supportive":</strong> The word "Supported" consistently translated poorly in all 5 markets. Participants interpreted it as "holding something up physically" rather than emotional care or institutional support. I tested "Supportive" as an alternative and it resonated consistently across all markets. This was a non-obvious change that would have significantly degraded data quality if missed.</p>
+              <p style="margin-top:12px"><strong>Change 2 — 5-point → 4-point scale:</strong> Participants struggled to meaningfully differentiate all 5 scale points. I observed central tendency bias (clustering around the midpoint) and satisficing behaviour (selecting the middle option to move through the survey quickly). Moving to a 4-point scale removed the midpoint, forcing a directional response and improving discrimination. The slight loss of granularity was worth the gain in data quality.</p>
+              <p style="margin-top:12px">Participants were anchored on a recent reporting experience at the start of the cognitive interview, which grounded responses in specific memory rather than general attitude — important for reducing abstract generalisation bias.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-divider"></div>
+
+      <!-- PILOT -->
+      <div class="case-section">
+        <div class="section-eyebrow">Validation</div>
+        <h3>In-Product Pilot Experiment</h3>
+        <p>Before recommending the team adopt the sentiment measure as their north star, I needed to demonstrate that the survey could actually detect meaningful product changes. I designed a pilot experiment to do this.</p>
+
+        <div class="callout">
+          <div class="callout-label">The core logic</div>
+          <p>There are three reasons a sentiment measure might show no change from a product experiment: (1) sample too small, (2) effect size too small, (3) the survey doesn't work. My strategy was to eliminate reasons 1 and 2, so that a null result could only be explained by reason 3.</p>
+        </div>
+
+        <!-- ACCORDION: Pilot methodology detail -->
+        <div class="accordion">
+          <button class="accordion-trigger" aria-expanded="false">
+            <div class="accordion-text">
+              <div class="accordion-label">Pilot experiment design detail</div>
+              <div class="accordion-sublabel">Sample strategy, feature selection, selection bias controls</div>
+            </div>
+            <div class="accordion-icon">+</div>
+          </button>
+          <div class="accordion-body">
+            <div class="accordion-body-inner">
+              <p><strong>Sample size:</strong> Ensured the experiment was powered to detect a 0.1% difference in means — deliberately setting a very sensitive threshold to eliminate "sample too small" as an explanation for a null result.</p>
+              <p style="margin-top:12px"><strong>Feature selection:</strong> I worked with the product team to identify a "no regrets" change — a meaningful product improvement that we were confident would be shipped regardless of outcome. The experiment needed a feature large enough to actually move user experience, but one where shipping it didn't depend on the research result. This eliminated the risk of a null result being confounded by an underwhelming product change.</p>
+              <p style="margin-top:12px">The shipped feature was a three-screen explainer sequence that contextualised the reporting outcome for users — significantly more information than the existing single-screen outcome message.</p>
+              <p style="margin-top:12px"><strong>Selection bias control:</strong> This is where the design required careful thought. The three-screen explainer made the flow longer in the test condition. If I registered survey respondents at the end of the flow, the test and control populations would have different completion profiles — users who stuck through the longer flow might be more engaged or more determined reporters, creating an imbalanced comparison. I solved this by registering respondents at the start of the flow, before the experimental treatment was applied, ensuring balanced populations.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-divider"></div>
+
+      <!-- PILOT RESULTS -->
+      <div class="case-section">
+        <div class="section-eyebrow">Results</div>
+        <h3>The Survey Worked</h3>
+
+        <div class="stat-row">
+          <div class="stat-box">
+            <div class="stat-number">R²=.68</div>
+            <div class="stat-label">Variance in user experience explained by sentiment factors</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-number">p=.001</div>
+            <div class="stat-label">Statistically significant test vs. control difference (t-test)</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-number">~0%</div>
+            <div class="stat-label">Variance explained by PSOs</div>
+          </div>
+        </div>
+
+        <div class="highlight-box">
+          <p><strong>The methodological win:</strong> The survey measured what it was supposed to measure. Our sentiment factors (Transparency, Voice, Support) captured meaningful variation in user experience that PSOs completely missed. An R² of .68 with p=.001 on a stepwise regression was strong validation that the measure was working. This gave the team confidence to ship the survey directly into the product.</p>
+        </div>
+
+        <p style="margin-top:16px">Notably, no product proxies were found in the available product data that could predict the sentiment result — meaning the next stage of proxy work was indefinitely postponed. The team would use the in-product sentiment measure directly as their primary signal.</p>
+      </div>
+
+      <div class="section-divider"></div>
+
+      <!-- IMPACT -->
+      <div class="case-section">
+        <div class="section-eyebrow">Impact</div>
+        <h3>How a New Metric Changed Product Strategy</h3>
+        <p>The shift from PSOs to Supportiveness changed not just the number on a dashboard — it changed what the team built. With PSOs as the goal, discoverability of existing tools was the primary lever. With Supportiveness, the question became: <em>does this make people feel genuinely supported?</em></p>
+
+        <ul class="findings-list" style="margin-top:20px">
+          <li>
+            <span class="find-icon">⭐</span>
+            <span><strong>New North Star — "Supportiveness":</strong> The team shipped the in-product version of the sentiment measure and updated their formal goal from driving PSOs to driving Supportiveness. This shift in metric changed how the entire backlog was evaluated and prioritised.</span>
+          </li>
+          <li>
+            <span class="find-icon">⚠️</span>
+            <span><strong>Warning Screens preserved:</strong> The team was considering removing Warning Screens in favour of content demotion — a change that would have looked neutral on PSOs. Analysis of Supportiveness showed WS meaningfully improved the user experience while reducing engagement equivalently to demotion. WS stayed on the platform.</span>
+          </li>
+          <li>
+            <span class="find-icon">🍕</span>
+            <span><strong>Pizza Tracker shipped:</strong> A long-requested feature showing report progress and next steps — consistently de-prioritised because it clearly wouldn't improve PSOs. The Supportiveness measure gave the team a way to justify the launch quantitatively. It detected significant Supportiveness improvements and also showed mitigation of the post-outcome engagement drop.</span>
+          </li>
+        </ul>
+      </div>
+
+      <div class="section-divider"></div>
+
+      <!-- MY ROLE -->
+      <div class="case-section">
+        <div class="section-eyebrow">My Role</div>
+        <h3>Responsibilities</h3>
+        <div class="role-list">
+          <div class="role-item"><div class="role-dot"></div><span>Identified the gap between team metric and user reality through ongoing qualitative research</span></div>
+          <div class="role-item"><div class="role-dot"></div><span>Built the quantitative business case: designed and ran the engagement impact analysis with DS support</span></div>
+          <div class="role-item"><div class="role-dot"></div><span>Led the full measurement programme: qualitative item generation, survey design, EFA (partnered with DS), cognitive testing across 5 markets</span></div>
+          <div class="role-item"><div class="role-dot"></div><span>Designed the pilot experiment methodology including selection bias controls and "no regrets" feature alignment</span></div>
+          <div class="role-item"><div class="role-dot"></div><span>Ran all analysis: t-test, stepwise regression, ANOVA comparing PSOs vs. sentiment factors</span></div>
+          <div class="role-item"><div class="role-dot"></div><span>Influenced PM, ENG, and DS leadership to change the metric, which shifted the team's entire product strategy and feature prioritisation</span></div>
+        </div>
+
+        <!-- ACCORDION: Cross-functional collaboration -->
+        <div class="accordion" style="margin-top:20px">
+          <button class="accordion-trigger" aria-expanded="false">
+            <div class="accordion-text">
+              <div class="accordion-label">Cross-functional collaboration details</div>
+              <div class="accordion-sublabel">Working with DS, PM, ENG, and leadership to drive the metric change</div>
+            </div>
+            <div class="accordion-icon">+</div>
+          </button>
+          <div class="accordion-body">
+            <div class="accordion-body-inner">
+              <p><strong>Data Science:</strong> Two significant DS partnerships. First, on the engagement impact analysis — iterating on the event definition, sample construction, and analytical approach to make the observational data as clean as possible. Second, on the EFA itself — running the factor analysis jointly, debating the 3- vs 4-factor solution, and ensuring the statistical approach was defensible to a DS-sceptical PM audience.</p>
+              <p style="margin-top:12px"><strong>PM — from sceptic to sponsor:</strong> The PM's initial position was that user satisfaction was a "soft" metric that couldn't be tied to business outcomes. The engagement analysis changed this. Once the 0.7% drop was on the table, the PM became an active co-investor in the measurement work — helping identify the "no regrets" pilot feature and providing air cover for the timeline.</p>
+              <p style="margin-top:12px"><strong>Engineering:</strong> Worked closely with ENG to design the in-product survey implementation — specifically the decision about where in the flow to register respondents. This required ENG to instrument the product differently than they would have done by default, which required me to explain the selection bias risk in terms they could act on.</p>
+              <p style="margin-top:12px"><strong>Influencing the metric change:</strong> The final step — getting the team to formally adopt Supportiveness as their H2 goal — required presenting the pilot results to PM, ENG, and DS leadership simultaneously. I framed the presentation around the methodological win (the survey works, PSOs don't explain user experience) rather than leading with the business case, which had already been established. The leadership presentation was structured as: here's what we set out to prove, here's that we proved it, here's what changes.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+        </div><!-- /content-card -->
+  </main>
+
+  <script>
+    document.querySelectorAll('.accordion-trigger').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const expanded = btn.getAttribute('aria-expanded') === 'true';
+        btn.setAttribute('aria-expanded', String(!expanded));
+        const body = btn.nextElementSibling;
+        body.style.maxHeight = !expanded ? body.scrollHeight + 'px' : '0';
+      });
+    });
+  </script>
+
+</body>
+</html>
