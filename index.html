@@ -525,9 +525,96 @@
       transition: opacity var(--transition);
     }
     .nav-links a.active .scroll-indicator { opacity: 1; }
+
+    /* ══════════════════════════════════════════════════
+       HAMBURGER BUTTON
+    ══════════════════════════════════════════════════ */
+    .hamburger {
+      display: none;
+      position: fixed; top: 14px; left: 14px; z-index: 300;
+      flex-direction: column; justify-content: center; align-items: center; gap: 5px;
+      width: 42px; height: 42px;
+      background: #fff; border: 1px solid var(--border);
+      border-radius: 10px; cursor: pointer; padding: 0;
+    }
+    .hamburger span {
+      display: block; width: 18px; height: 2px;
+      background: var(--text-1); border-radius: 2px;
+      transition: transform 0.25s ease, opacity 0.2s ease;
+    }
+    .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+    .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    .nav-backdrop {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,0.25); z-index: 150;
+      opacity: 0; transition: opacity 0.3s ease; pointer-events: none;
+    }
+    .nav-backdrop.visible { opacity: 1; pointer-events: all; }
+
+    /* ══════════════════════════════════════════════════
+       RESPONSIVE — SHARED (≤768px)
+    ══════════════════════════════════════════════════ */
+    @media (max-width: 768px) {
+      .hamburger { display: flex; }
+      .nav-backdrop { display: block; }
+
+      nav#sidebar {
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+        z-index: 200;
+      }
+      nav#sidebar.open {
+        transform: translateX(0);
+        box-shadow: 4px 0 32px rgba(0,0,0,0.15);
+      }
+
+      main {
+        margin-left: 0 !important;
+        padding: 72px 20px 80px;
+        max-width: 100%;
+      }
+
+      h2 { font-size: clamp(1.4rem, 6vw, 2rem); }
+      p  { font-size: 0.9rem; }
+    }
+
+    /* ══════════════════════════════════════════════════
+       RESPONSIVE — INDEX.HTML SPECIFIC (≤768px)
+    ══════════════════════════════════════════════════ */
+    @media (max-width: 768px) {
+      /* hero */
+      section#hero { padding-top: 0; }
+      .hero-chips { gap: 6px; }
+      .chip { font-size: 0.7rem; padding: 4px 10px; }
+
+      /* case cards: hide illustration, stack */
+      .case-card { flex-direction: column; }
+      .case-card-illus { display: none; }
+      .case-cards { gap: 14px; }
+
+      /* about */
+      .about-grid { grid-template-columns: 1fr; gap: 24px; }
+
+      /* resume */
+      .resume-item-header { flex-direction: column; gap: 2px; align-items: flex-start; }
+      .resume-item-date { margin-top: 2px; }
+
+      /* skill tags */
+      .skill-tags { gap: 6px; }
+      .skill-tag { font-size: 0.7rem; }
+    }
   </style>
 </head>
 <body>
+
+  <!-- Mobile hamburger -->
+  <button class="hamburger" aria-label="Open navigation" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+  <div class="nav-backdrop"></div>
+
 
   <!-- ── SIDEBAR NAV ──────────────────────────────────── -->
   <nav id="sidebar">
@@ -877,6 +964,30 @@
     }, { rootMargin: '-30% 0px -60% 0px' });
 
     sections.forEach(s => observer.observe(s));
+
+    // ── Mobile hamburger ──────────────────────────────
+    (function () {
+      const btn      = document.querySelector('.hamburger');
+      const sidebar  = document.getElementById('sidebar');
+      const backdrop = document.querySelector('.nav-backdrop');
+      if (!btn) return;
+
+      function setOpen(open) {
+        btn.setAttribute('aria-expanded', open);
+        btn.classList.toggle('open', open);
+        sidebar.classList.toggle('open', open);
+        backdrop.classList.toggle('visible', open);
+        document.body.style.overflow = open ? 'hidden' : '';
+      }
+
+      btn.addEventListener('click', () => setOpen(!sidebar.classList.contains('open')));
+      backdrop.addEventListener('click', () => setOpen(false));
+
+      // Close on any nav link click (mobile)
+      sidebar.querySelectorAll('a').forEach(a =>
+        a.addEventListener('click', () => { if (window.innerWidth <= 768) setOpen(false); })
+      );
+    })();
   </script>
 
 </body>
