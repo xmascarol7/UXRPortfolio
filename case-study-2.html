@@ -285,13 +285,26 @@
     /* ══════════════════════════════════════════════════
        HAMBURGER BUTTON
     ══════════════════════════════════════════════════ */
-    .hamburger {
+    .mobile-topbar {
       display: none;
-      position: fixed; top: 14px; left: 14px; z-index: 300;
+      position: fixed; top: 0; left: 0; right: 0; z-index: 300;
+      height: 56px;
+      background: #fff; border-bottom: 1px solid var(--border);
+      align-items: center; gap: 12px;
+      padding: 0 16px;
+    }
+    .mobile-topbar-name {
+      font-family: var(--serif);
+      font-size: 1rem;
+      color: var(--text-1);
+    }
+
+    .hamburger {
+      display: flex;
       flex-direction: column; justify-content: center; align-items: center; gap: 5px;
-      width: 42px; height: 42px;
-      background: #fff; border: 1px solid var(--border);
-      border-radius: 10px; cursor: pointer; padding: 0;
+      width: 36px; height: 36px; flex-shrink: 0;
+      background: var(--bg-2); border: 1px solid var(--border);
+      border-radius: 8px; cursor: pointer; padding: 0;
     }
     .hamburger span {
       display: block; width: 18px; height: 2px;
@@ -313,7 +326,7 @@
        RESPONSIVE — SHARED (≤768px)
     ══════════════════════════════════════════════════ */
     @media (max-width: 768px) {
-      .hamburger { display: flex; }
+      .mobile-topbar { display: flex; }
       .nav-backdrop { display: block; }
 
       nav#sidebar {
@@ -328,7 +341,7 @@
 
       main {
         margin-left: 0 !important;
-        padding: 72px 20px 80px;
+        padding: 80px 20px 80px;
         max-width: 100%;
       }
 
@@ -389,10 +402,13 @@
 </head>
 <body>
 
-  <!-- Mobile hamburger -->
-  <button class="hamburger" aria-label="Open navigation" aria-expanded="false">
-    <span></span><span></span><span></span>
-  </button>
+  <!-- Mobile top bar -->
+  <div class="mobile-topbar">
+    <button class="hamburger" aria-label="Open navigation" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+    <span class="mobile-topbar-name">Bryan Carroll</span>
+  </div>
   <div class="nav-backdrop"></div>
 
 
