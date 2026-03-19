@@ -1,0 +1,914 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Developer ROI Benchmarking — Bryan Carroll</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=DM+Serif+Display&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:           #FAFAFA;
+      --bg-2:         #F4F4F5;
+      --bg-3:         #EBEBED;
+      --text-1:       #111827;
+      --text-2:       #4B5563;
+      --text-3:       #9CA3AF;
+      --accent:       #1D4ED8;
+      --accent-light: #EFF6FF;
+      --accent-mid:   #BFDBFE;
+      --border:       #E5E7EB;
+      --nav-w:        260px;
+      --serif:        'DM Serif Display', Georgia, serif;
+      --sans:         'Inter', system-ui, sans-serif;
+      --radius:       12px;
+      --transition:   0.2s ease;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--sans);
+      background: var(--bg);
+      color: var(--text-1);
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* ── SIDEBAR ─────────────────────────────────── */
+    nav#sidebar {
+      position: fixed; top: 0; left: 0;
+      width: var(--nav-w); height: 100vh;
+      background: #fff; border-right: 1px solid var(--border);
+      display: flex; flex-direction: column;
+      padding: 48px 32px; z-index: 100; gap: 0;
+    }
+    .nav-identity { margin-bottom: 48px; }
+    .nav-identity .role {
+      font-size: 0.75rem; font-weight: 500; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--text-3); margin-top: 6px;
+    }
+    .nav-section-label {
+      font-size: 0.65rem; font-weight: 600; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--text-3); margin-bottom: 12px;
+    }
+    .nav-links { list-style: none; margin-bottom: 36px; }
+    .nav-links li + li { margin-top: 2px; }
+    .nav-links a {
+      display: block; font-size: 0.875rem; font-weight: 400;
+      color: var(--text-2); text-decoration: none;
+      padding: 7px 12px; border-radius: 8px;
+      transition: background var(--transition), color var(--transition);
+    }
+    .nav-links a:hover, .nav-links a.active { background: var(--accent-light); color: var(--accent); }
+    .nav-links a.active { font-weight: 500; }
+    .nav-divider { height: 1px; background: var(--border); margin-bottom: 36px; }
+    .nav-footer { margin-top: auto; display: flex; flex-direction: column; gap: 12px; }
+    .nav-footer a { font-size: 0.8rem; color: var(--text-3); text-decoration: none; transition: color var(--transition); }
+    .nav-footer a:hover { color: var(--accent); }
+
+    /* ── MAIN ────────────────────────────────────── */
+    main { margin-left: var(--nav-w); flex: 1; max-width: 900px; padding: 80px 64px 120px; }
+
+    /* ── TYPOGRAPHY ──────────────────────────────── */
+    h2 { font-family: var(--serif); font-size: clamp(1.75rem, 3vw, 2.25rem); line-height: 1.2; color: var(--text-1); margin-bottom: 20px; }
+    h3 { font-size: 1rem; font-weight: 600; color: var(--text-1); margin-bottom: 10px; }
+    p { font-size: 0.9375rem; line-height: 1.75; color: var(--text-2); }
+    p + p { margin-top: 14px; }
+    strong { color: var(--text-1); font-weight: 600; }
+
+    /* ── BACK LINK ───────────────────────────────── */
+    .back-link {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 0.8rem; color: var(--text-3); text-decoration: none;
+      margin-bottom: 32px; transition: color var(--transition);
+    }
+    .back-link:hover { color: var(--accent); }
+
+    /* ── CASE HERO ───────────────────────────────── */
+    .case-hero {
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 48px 56px;
+      display: grid; grid-template-columns: 1fr 220px;
+      gap: 40px; align-items: center;
+      margin-bottom: 0;
+    }
+    .company-tag {
+      display: inline-block; font-size: 0.65rem; font-weight: 700;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--accent); background: var(--accent-light);
+      padding: 4px 10px; border-radius: 999px; margin-bottom: 16px;
+    }
+    .method-pills { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+    .method-pill {
+      font-size: 0.75rem; font-weight: 500;
+      padding: 5px 12px; border-radius: 999px;
+      border: 1px solid var(--border); color: var(--text-2);
+    }
+
+    /* ── CONTENT CARD ────────────────────────────── */
+    .content-card {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-top: none;
+      border-radius: 0 0 var(--radius) var(--radius);
+      padding: 56px;
+    }
+
+    /* ── SECTION SPACING ─────────────────────────── */
+    .case-section { margin-bottom: 48px; }
+    .case-section:last-child { margin-bottom: 0; }
+    .section-divider { height: 1px; background: var(--border); margin: 48px 0; }
+
+    .section-eyebrow {
+      font-size: 0.65rem; font-weight: 700; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--accent); margin-bottom: 10px;
+    }
+
+    /* ── HIGHLIGHT BOX ───────────────────────────── */
+    .highlight-box {
+      background: var(--accent-light);
+      border-left: 3px solid var(--accent);
+      border-radius: 0 8px 8px 0;
+      padding: 16px 20px; margin: 20px 0;
+    }
+    .highlight-box p { color: var(--text-1); font-size: 0.875rem; }
+
+    /* ── WARNING BOX ─────────────────────────────── */
+    .warning-box {
+      background: #FFF7ED;
+      border-left: 3px solid #F59E0B;
+      border-radius: 0 8px 8px 0;
+      padding: 16px 20px; margin: 20px 0;
+    }
+    .warning-box p { color: #92400E; font-size: 0.875rem; }
+
+    /* ── STAT ROW ────────────────────────────────── */
+    .stat-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 16px; margin: 24px 0; }
+    .stat-box { background: var(--bg-2); border-radius: 10px; padding: 20px; text-align: center; }
+    .stat-box.accent { background: var(--accent); }
+    .stat-box.accent .stat-number { color: #fff; }
+    .stat-box.accent .stat-label { color: rgba(255,255,255,0.75); }
+    .stat-number { font-family: var(--serif); font-size: 2rem; color: var(--text-1); line-height: 1; margin-bottom: 6px; }
+    .stat-label { font-size: 0.75rem; color: var(--text-3); font-weight: 500; line-height: 1.3; }
+
+    /* ── PHASE GRID ──────────────────────────────── */
+    .phase-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 20px 0; }
+    .phase-box { background: var(--bg-2); border-radius: 10px; padding: 20px 24px; }
+    .phase-label { font-size: 0.65rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 8px; }
+    .phase-box p { font-size: 0.85rem; }
+
+    /* ── FINDINGS LIST ───────────────────────────── */
+    .findings-list { list-style: none; margin: 16px 0; }
+    .findings-list li {
+      padding: 14px 0; border-bottom: 1px solid var(--border);
+      display: flex; gap: 14px; font-size: 0.875rem; color: var(--text-2); line-height: 1.6;
+    }
+    .findings-list li:last-child { border-bottom: none; }
+    .find-icon { font-size: 1rem; flex-shrink: 0; margin-top: 2px; }
+
+    /* ── OUTCOME GRID ────────────────────────────── */
+    .outcome-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 20px 0; }
+    .outcome-box { border: 1px solid var(--border); border-radius: 10px; padding: 20px 24px; }
+    .outcome-title { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-2); margin-bottom: 8px; }
+    .outcome-box p { font-size: 0.85rem; }
+
+    /* ── ROLE LIST ───────────────────────────────── */
+    .role-list { margin: 16px 0; display: flex; flex-direction: column; gap: 8px; }
+    .role-item { display: flex; gap: 10px; align-items: flex-start; font-size: 0.875rem; color: var(--text-2); line-height: 1.6; }
+    .role-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); flex-shrink: 0; margin-top: 8px; }
+
+    /* ── ACCORDION ───────────────────────────────── */
+    .accordion { border: 1px solid var(--border); border-radius: 10px; margin-top: 16px; overflow: hidden; }
+    .accordion + .accordion { margin-top: 10px; }
+
+    .accordion-trigger {
+      width: 100%; display: flex; align-items: center; justify-content: space-between;
+      gap: 16px; padding: 16px 20px; background: var(--bg-2);
+      border: none; cursor: pointer; text-align: left;
+      transition: background var(--transition);
+    }
+    .accordion-trigger:hover { background: var(--bg-3); }
+    .accordion-trigger[aria-expanded="true"] { background: var(--accent-light); }
+
+    .accordion-label {
+      font-size: 0.825rem; font-weight: 500; color: var(--text-1);
+    }
+    .accordion-sublabel {
+      font-size: 0.75rem; color: var(--text-3); margin-top: 2px;
+    }
+    .accordion-text { flex: 1; }
+
+    .accordion-icon {
+      width: 26px; height: 26px; border-radius: 50%;
+      border: 1.5px solid var(--border); background: #fff;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem; line-height: 1; flex-shrink: 0; color: var(--text-2);
+      transition: transform 0.25s ease, background var(--transition), border-color var(--transition), color var(--transition);
+    }
+    .accordion-trigger[aria-expanded="true"] .accordion-icon {
+      transform: rotate(45deg);
+      background: var(--accent-light); border-color: var(--accent); color: var(--accent);
+    }
+
+    .accordion-body {
+      max-height: 0; overflow: hidden;
+      transition: max-height 0.35s ease;
+    }
+    .accordion-body-inner { padding: 24px 20px; border-top: 1px solid var(--border); }
+    .accordion-body-inner p { font-size: 0.875rem; }
+    .accordion-body-inner p + p { margin-top: 12px; }
+
+    /* ── DETAIL TABLE ─────────────────────────────── */
+    .detail-table { width: 100%; border-collapse: collapse; font-size: 0.825rem; margin-top: 12px; }
+    .detail-table th { text-align: left; font-size: 0.65rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-3); padding: 8px 12px; border-bottom: 1px solid var(--border); }
+    .detail-table td { padding: 10px 12px; border-bottom: 1px solid var(--border); color: var(--text-2); vertical-align: top; line-height: 1.5; }
+    .detail-table tr:last-child td { border-bottom: none; }
+    .detail-table td:first-child { font-weight: 500; color: var(--text-1); white-space: nowrap; }
+
+    /* ── ANALYSIS NOTE ───────────────────────────── */
+    .analysis-note {
+      background: var(--bg-2); border-radius: 8px; padding: 14px 16px; margin-top: 14px;
+    }
+    .analysis-note p { font-size: 0.825rem; }
+
+    /* ── CHART: PLATFORM BAR ──────────────────────── */
+    .platform-chart-wrap { margin: 28px 0; }
+    .platform-chart-title { font-size: 0.75rem; font-weight: 600; color: var(--text-2); margin-bottom: 18px; letter-spacing: 0.04em; text-transform: uppercase; }
+    .platform-bars { display: flex; flex-direction: column; gap: 14px; }
+    .platform-row { display: grid; grid-template-columns: 130px 1fr 54px; align-items: center; gap: 12px; }
+    .platform-row.highlighted .platform-label { color: var(--text-1); font-weight: 600; }
+    .platform-label { font-size: 0.8rem; color: var(--text-2); text-align: right; }
+    .platform-track { height: 32px; background: var(--bg-2); border-radius: 6px; overflow: hidden; position: relative; }
+    .platform-fill {
+      height: 100%; border-radius: 6px;
+      display: flex; align-items: center; padding-left: 12px;
+      font-size: 0.72rem; font-weight: 600; color: rgba(255,255,255,0.9);
+      transition: width 0.9s ease;
+    }
+    .platform-fill.default { background: var(--accent-mid); color: var(--text-2); padding-left: 0; }
+    .platform-fill.highlighted { background: var(--accent); }
+    .platform-pct { font-size: 0.8rem; font-weight: 600; color: var(--text-1); }
+    .platform-row.highlighted .platform-pct { color: var(--accent); }
+    .chart-footnote { font-size: 0.72rem; color: var(--text-3); margin-top: 10px; font-style: italic; }
+
+    /* ── ILLUSTRATION FRAME ───────────────────────── */
+    .illus-frame {
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 28px;
+      margin: 24px 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .illus-frame svg { max-width: 100%; height: auto; }
+
+    /* ── REFLECTION BOX ──────────────────────────── */
+    .reflection-box {
+      border: 1px solid var(--border); border-radius: 10px; padding: 28px 32px;
+    }
+    .reflection-item { margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid var(--border); }
+    .reflection-item:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
+    .reflection-label { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-3); margin-bottom: 6px; }
+    .reflection-item p { font-size: 0.875rem; }
+
+    /* ══════════════════════════════════════════════════
+       HAMBURGER BUTTON
+    ══════════════════════════════════════════════════ */
+    .mobile-topbar {
+      display: none;
+      position: fixed; top: 0; left: 0; right: 0; z-index: 300;
+      height: 56px;
+      background: #fff; border-bottom: 1px solid var(--border);
+      align-items: center; gap: 12px;
+      padding: 0 16px;
+    }
+    .mobile-topbar-name {
+      font-family: var(--serif);
+      font-size: 1rem;
+      color: var(--text-1);
+    }
+
+    .hamburger {
+      display: flex;
+      flex-direction: column; justify-content: center; align-items: center; gap: 5px;
+      width: 36px; height: 36px; flex-shrink: 0;
+      background: var(--bg-2); border: 1px solid var(--border);
+      border-radius: 8px; cursor: pointer; padding: 0;
+    }
+    .hamburger span {
+      display: block; width: 18px; height: 2px;
+      background: var(--text-1); border-radius: 2px;
+      transition: transform 0.25s ease, opacity 0.2s ease;
+    }
+    .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+    .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    .nav-backdrop {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,0.25); z-index: 150;
+      opacity: 0; transition: opacity 0.3s ease; pointer-events: none;
+    }
+    .nav-backdrop.visible { opacity: 1; pointer-events: all; }
+
+    /* ══════════════════════════════════════════════════
+       RESPONSIVE — SHARED (≤768px)
+    ══════════════════════════════════════════════════ */
+    @media (max-width: 768px) {
+      .mobile-topbar { display: flex; }
+      .nav-backdrop { display: block; }
+
+      nav#sidebar {
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+        z-index: 200;
+      }
+      nav#sidebar.open {
+        transform: translateX(0);
+        box-shadow: 4px 0 32px rgba(0,0,0,0.15);
+      }
+
+      main {
+        margin-left: 0 !important;
+        padding: 80px 20px 80px;
+        max-width: 100%;
+      }
+
+      h2 { font-size: clamp(1.4rem, 6vw, 2rem); }
+      p  { font-size: 0.9rem; }
+    }
+
+    /* ══════════════════════════════════════════════════
+       RESPONSIVE — CASE STUDY SPECIFIC (≤768px)
+    ══════════════════════════════════════════════════ */
+    @media (max-width: 768px) {
+      .case-hero {
+        grid-template-columns: 1fr;
+        padding: 32px 28px;
+        gap: 0;
+      }
+      .case-hero > svg,
+      .case-hero > div:last-child { display: none; }
+      .method-pills { gap: 6px; }
+      .method-pill { font-size: 0.7rem; padding: 4px 10px; }
+
+      .content-card { padding: 32px 20px; }
+      .phase-grid { grid-template-columns: 1fr; }
+      .outcome-grid { grid-template-columns: 1fr; }
+      .stat-row { grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); }
+      .stat-number { font-size: 1.6rem; }
+
+      .platform-row { grid-template-columns: 90px 1fr 40px; gap: 8px; }
+      .platform-label { font-size: 0.72rem; }
+
+      .accordion-trigger { padding: 14px 16px; }
+      .back-link { margin-bottom: 20px; }
+      .accordion-body-inner { overflow-x: auto; }
+      .detail-table { min-width: 480px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Mobile top bar -->
+  <div class="mobile-topbar">
+    <button class="hamburger" aria-label="Open navigation" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+    <span class="mobile-topbar-name">Bryan Carroll</span>
+  </div>
+  <div class="nav-backdrop"></div>
+
+  <nav id="sidebar">
+    <div class="nav-identity">
+      <a href="index.html" style="font-family:var(--serif);font-size:1.25rem;color:var(--text-1);text-decoration:none;line-height:1.2;display:block;">Bryan Carroll</a>
+      <div class="role">User Research &amp; Insights</div>
+    </div>
+    <div class="nav-section-label">Work</div>
+    <ul class="nav-links">
+      <li><a href="case-study-1.html">Business Verification</a></li>
+      <li><a href="case-study-2.html">Integrity Measurement</a></li>
+      <li><a href="case-study-3.html">NetzDG Reporting</a></li>
+      <li><a href="case-study-4.html" class="active">Developer ROI</a></li>
+    </ul>
+    <div class="nav-divider"></div>
+    <div class="nav-section-label">About</div>
+    <ul class="nav-links">
+      <li><a href="index.html#about">About me</a></li>
+      <li><a href="index.html#resume">Résumé</a></li>
+      <li><a href="index.html#contact">Contact</a></li>
+    </ul>
+    <div class="nav-footer">
+      <a href="mailto:bryan@carroll-parker.me">bryan@carroll-parker.me</a>
+    </div>
+  </nav>
+
+  <main>
+    <a class="back-link" href="index.html">← Back to work</a>
+
+    <!-- HERO -->
+    <div class="case-hero">
+      <div>
+        <span class="company-tag">Meta · Reality Labs · 2025</span>
+        <h2>Developer ROI<br>Benchmarking</h2>
+        <p style="font-size:0.9rem;color:var(--text-2);line-height:1.65;max-width:420px">A multi-phase programme to understand developer economics on the Horizon platform — from building the data collection infrastructure to running a competitive benchmark study across five major platforms.</p>
+        <div class="method-pills">
+          <span class="method-pill">Survey Design</span>
+          <span class="method-pill">Competitive Benchmarking</span>
+          <span class="method-pill">Descriptive Statistics</span>
+          <span class="method-pill">t-test</span>
+          <span class="method-pill">Cognitive Testing</span>
+          <span class="method-pill">Stakeholder Alignment</span>
+        </div>
+      </div>
+      <!-- Hero SVG: bar chart comparing platforms -->
+      <svg viewBox="0 0 200 190" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <!-- Grid -->
+        <line x1="22" y1="165" x2="190" y2="165" stroke="#D1D5DB" stroke-width="1"/>
+        <line x1="22" y1="130" x2="190" y2="130" stroke="#E5E7EB" stroke-width="0.5" stroke-dasharray="3 3"/>
+        <line x1="22" y1="95"  x2="190" y2="95"  stroke="#E5E7EB" stroke-width="0.5" stroke-dasharray="3 3"/>
+        <line x1="22" y1="60"  x2="190" y2="60"  stroke="#E5E7EB" stroke-width="0.5" stroke-dasharray="3 3"/>
+        <!-- Bars: other platforms (muted) -->
+        <rect x="72"  y="112" width="26" height="53" rx="3" fill="#BFDBFE"/>
+        <rect x="112" y="101" width="26" height="64" rx="3" fill="#BFDBFE"/>
+        <rect x="152" y="118" width="26" height="47" rx="3" fill="#BFDBFE"/>
+        <!-- Bar: Meta Horizon (highlighted) -->
+        <rect x="32"  y="48"  width="26" height="117" rx="3" fill="#1D4ED8"/>
+        <!-- Labels -->
+        <text x="45"  y="178" text-anchor="middle" font-size="7.5" fill="#6B7280" font-family="Inter,sans-serif">Horizon</text>
+        <text x="85"  y="178" text-anchor="middle" font-size="7.5" fill="#9CA3AF" font-family="Inter,sans-serif">Mobile</text>
+        <text x="125" y="178" text-anchor="middle" font-size="7.5" fill="#9CA3AF" font-family="Inter,sans-serif">Console</text>
+        <text x="165" y="178" text-anchor="middle" font-size="7.5" fill="#9CA3AF" font-family="Inter,sans-serif">PC</text>
+        <!-- Y-axis labels -->
+        <text x="18" y="168" text-anchor="end" font-size="7" fill="#9CA3AF" font-family="Inter,sans-serif">0%</text>
+        <text x="18" y="133" text-anchor="end" font-size="7" fill="#9CA3AF" font-family="Inter,sans-serif">30%</text>
+        <text x="18" y="98"  text-anchor="end" font-size="7" fill="#9CA3AF" font-family="Inter,sans-serif">60%</text>
+        <text x="18" y="63"  text-anchor="end" font-size="7" fill="#9CA3AF" font-family="Inter,sans-serif">90%</text>
+        <!-- Value labels on bars -->
+        <text x="45"  y="44"  text-anchor="middle" font-size="8" fill="#1D4ED8" font-weight="600" font-family="Inter,sans-serif">91%</text>
+        <text x="85"  y="108" text-anchor="middle" font-size="7.5" fill="#9CA3AF" font-family="Inter,sans-serif">45%</text>
+        <text x="125" y="97"  text-anchor="middle" font-size="7.5" fill="#9CA3AF" font-family="Inter,sans-serif">56%</text>
+        <text x="165" y="114" text-anchor="middle" font-size="7.5" fill="#9CA3AF" font-family="Inter,sans-serif">42%</text>
+        <!-- Chart title -->
+        <text x="106" y="14" text-anchor="middle" font-size="8" fill="#6B7280" font-family="Inter,sans-serif">% apps not breaking even</text>
+      </svg>
+    </div>
+
+    <div class="content-card">
+
+      <!-- CONTEXT -->
+      <div class="case-section">
+        <div class="section-eyebrow">Context</div>
+        <h3>The Funding Blind Spot</h3>
+        <p>Meta runs a funding programme to support third-party developers building apps and games for the Horizon platform. The programme is managed by Meta's Content and Marketing group — a team with full visibility to sales data, but <strong>no visibility to cost data</strong>.</p>
+        <p>Without knowing what developers spend to build, there was no way to assess whether the funding was actually working. A title earning $100k in net revenue could represent a huge success for a solo developer who spent a few thousand — or a total loss for a studio that invested millions.</p>
+
+        <div class="stat-row">
+          <div class="stat-box accent">
+            <div class="stat-number">91%</div>
+            <div class="stat-label">of Horizon apps<br>losing money</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-number">36–57%</div>
+            <div class="stat-label">of apps earn 2×+ returns<br>on other platforms</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-number">213</div>
+            <div class="stat-label">unique developers<br>in benchmark study</div>
+          </div>
+        </div>
+
+        <div class="warning-box">
+          <p>Initial internal analysis revealed a clear and urgent platform risk: the vast majority of Horizon developers were not breaking even, even with funding support. The programme needed a much clearer picture — both internally and in competitive context.</p>
+        </div>
+      </div>
+
+      <div class="section-divider"></div>
+
+      <!-- MY ROLE -->
+      <div class="case-section">
+        <div class="section-eyebrow">My Role</div>
+        <h3>Bridging Data, Research, and Product</h3>
+        <p>This work spanned two distinct but connected workstreams. I drove the strategic framing and cross-functional execution of both — from building the data infrastructure to scoping and overseeing the competitive research.</p>
+        <div class="role-list">
+          <div class="role-item"><div class="role-dot"></div><span>Identified the cost-data gap and aligned senior stakeholders on the approach to address it — specifically, the decision to collect cost <em>drivers</em> rather than asking developers directly for cost figures</span></div>
+          <div class="role-item"><div class="role-dot"></div><span>Supported a researcher on my team through cognitive testing that shaped the in-product form design — including the critical decision to shift from open-text to ranged responses in key fields</span></div>
+          <div class="role-item"><div class="role-dot"></div><span>Aligned Product Management, Content Design, and Product Design on an implementation approach that minimised friction for developers during the app submission flow</span></div>
+          <div class="role-item"><div class="role-dot"></div><span>Supported a data scientist in joining the in-product cost data with store revenue figures to produce the initial ROI analysis</span></div>
+          <div class="role-item"><div class="role-dot"></div><span>Scoped and supported the competitive market research study — defining goals, overseeing execution, and translating findings into actionable recommendations for the funding programme</span></div>
+        </div>
+      </div>
+
+      <div class="section-divider"></div>
+
+      <!-- PHASE 1: DATA COLLECTION -->
+      <div class="case-section">
+        <div class="section-eyebrow">Phase 1 — Internal Data Collection</div>
+        <h3>Building the Missing Data Layer</h3>
+        <p>To understand developer costs without burdening them with invasive questions, I drove the development of a cost data collection step embedded in the existing app submission flow. Rather than asking developers for a direct cost figure, we asked about <strong>cost drivers</strong> — the inputs that could be used to model an approximate cost.</p>
+
+        <!-- Form illustration SVG -->
+        <div class="illus-frame">
+          <svg viewBox="0 0 340 260" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <!-- Phone/modal frame -->
+            <rect x="60" y="10" width="220" height="240" rx="16" fill="#fff" stroke="#E5E7EB" stroke-width="1.5"/>
+            <!-- Header band -->
+            <rect x="60" y="10" width="220" height="60" rx="16" fill="#1D4ED8"/>
+            <rect x="60" y="44" width="220" height="26" fill="#1D4ED8"/>
+            <!-- Header icon -->
+            <circle cx="170" cy="30" r="10" fill="rgba(255,255,255,0.2)"/>
+            <text x="170" y="35" text-anchor="middle" font-size="10" fill="#fff" font-family="Inter,sans-serif">📊</text>
+            <!-- Header text -->
+            <text x="170" y="56" text-anchor="middle" font-size="9.5" fill="#fff" font-weight="600" font-family="Inter,sans-serif">Help us understand your project</text>
+            <text x="170" y="68" text-anchor="middle" font-size="8" fill="rgba(255,255,255,0.75)" font-family="Inter,sans-serif">Takes about 2 minutes</text>
+
+            <!-- Field 1 -->
+            <text x="80" y="96" font-size="8.5" fill="#6B7280" font-weight="600" font-family="Inter,sans-serif" letter-spacing="0.05em">NUMBER OF DEVELOPERS</text>
+            <rect x="80" y="102" width="180" height="28" rx="6" fill="#F9FAFB" stroke="#E5E7EB" stroke-width="1"/>
+            <text x="95" y="120" font-size="9" fill="#111827" font-family="Inter,sans-serif">1–2 developers</text>
+            <text x="242" y="120" font-size="10" fill="#9CA3AF" font-family="Inter,sans-serif">▾</text>
+
+            <!-- Field 2 -->
+            <text x="80" y="148" font-size="8.5" fill="#6B7280" font-weight="600" font-family="Inter,sans-serif" letter-spacing="0.05em">TIME SPENT DEVELOPING</text>
+            <rect x="80" y="154" width="180" height="28" rx="6" fill="#F9FAFB" stroke="#E5E7EB" stroke-width="1"/>
+            <text x="95" y="172" font-size="9" fill="#111827" font-family="Inter,sans-serif">6–12 months</text>
+            <text x="242" y="172" font-size="10" fill="#9CA3AF" font-family="Inter,sans-serif">▾</text>
+
+            <!-- Field 3 -->
+            <text x="80" y="200" font-size="8.5" fill="#6B7280" font-weight="600" font-family="Inter,sans-serif" letter-spacing="0.05em">LOCATION OF DEVELOPMENT TEAM</text>
+            <rect x="80" y="206" width="180" height="28" rx="6" fill="#F9FAFB" stroke="#E5E7EB" stroke-width="1"/>
+            <text x="95" y="224" font-size="9" fill="#111827" font-family="Inter,sans-serif">Western Europe</text>
+            <text x="242" y="224" font-size="10" fill="#9CA3AF" font-family="Inter,sans-serif">▾</text>
+
+            <!-- Submit button -->
+            <rect x="80" y="241" width="180" height="0" rx="6" fill="#1D4ED8"/>
+          </svg>
+        </div>
+
+        <p>This design was the result of meaningful stakeholder debate. Senior stakeholders initially pushed for open-text responses to capture greater granularity. Cognitive testing revealed that the additional burden of estimating precise figures produced <strong>lower quality answers</strong> — respondents would skip fields or guess wildly. Ranges provided a practical middle ground: enough precision to model costs, with far better completion and accuracy rates.</p>
+
+        <!-- Accordion: cognitive testing detail -->
+        <div class="accordion">
+          <button class="accordion-trigger" aria-expanded="false">
+            <div class="accordion-text">
+              <div class="accordion-label">Cognitive testing — what it changed and why</div>
+              <div class="accordion-sublabel">Open text vs. ranges, field ordering, header framing</div>
+            </div>
+            <div class="accordion-icon">+</div>
+          </button>
+          <div class="accordion-body">
+            <div class="accordion-body-inner">
+              <p>Cognitive testing was conducted to probe how developers interpreted and responded to each field in the form. The sessions surfaced two significant issues that would have meaningfully degraded data quality.</p>
+              <p style="margin-top:12px"><strong>Open text vs. ranges:</strong> When asked for an exact cost figure (e.g. "how much did your team cost?"), participants either left the field blank, anchored on arbitrary round numbers, or expressed frustration. When the same information was gathered via ranges, completion was higher and responses were more internally consistent across sessions. The additional precision of open text was illusory — the ranges produced more reliable data.</p>
+              <p style="margin-top:12px"><strong>Team location:</strong> Initial phrasing around team location generated confusion about whether to report the studio's registered country or where developers were physically working. Refinement to regional buckets and a brief clarifying sub-label resolved the ambiguity across all sessions.</p>
+              <div class="analysis-note">
+                <p><strong>Stakeholder implication:</strong> The open-text to range pivot required active advocacy — stakeholders had to accept a reduction in theoretical precision in exchange for meaningfully better real-world data quality. The cognitive testing evidence made that case clearly and the change was adopted.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Accordion: cross-functional implementation -->
+        <div class="accordion">
+          <button class="accordion-trigger" aria-expanded="false">
+            <div class="accordion-text">
+              <div class="accordion-label">Cross-functional implementation approach</div>
+              <div class="accordion-sublabel">Minimising friction in the app submission flow</div>
+            </div>
+            <div class="accordion-icon">+</div>
+          </button>
+          <div class="accordion-body">
+            <div class="accordion-body-inner">
+              <p>Embedding a new data collection step in the app submission flow introduced a real product risk: any increase in perceived friction could drive up drop-off among developers at a critical moment — just before they publish. I aligned Product Management, Content Design, and Product Design around a set of principles to mitigate this.</p>
+              <table class="detail-table" style="margin-top:16px">
+                <thead>
+                  <tr><th>Design Principle</th><th>Rationale</th></tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Frame as benefit, not request</td>
+                    <td>The header copy emphasised that this data would help us understand developer needs and improve the funding programme — contextualising the ask as being in the developer's interest.</td>
+                  </tr>
+                  <tr>
+                    <td>Time expectation upfront</td>
+                    <td>Stating "takes about 2 minutes" reduced uncertainty. Ambiguous length is a major friction driver; a concrete, short estimate reduces abandonment.</td>
+                  </tr>
+                  <tr>
+                    <td>Ranged dropdowns, not free text</td>
+                    <td>Reduces the cognitive effort of each response, keeping the interaction fast and low-stakes.</td>
+                  </tr>
+                  <tr>
+                    <td>Minimal fields</td>
+                    <td>Three fields only — number of developers, time spent, and team location. Enough to model cost; not so many as to feel burdensome.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-divider"></div>
+
+      <!-- PHASE 2: MARKET RESEARCH -->
+      <div class="case-section">
+        <div class="section-eyebrow">Phase 2 — Competitive Benchmark Study</div>
+        <h3>Putting Horizon in Context</h3>
+        <p>Once internal data showed most Horizon developers weren't breaking even, the next question was: <em>is this a Meta problem, or an industry-wide problem?</em> Understanding the competitive context was essential before designing any solution. I scoped and supported a market research study to answer this question.</p>
+
+        <div class="phase-grid">
+          <div class="phase-box">
+            <div class="phase-label">Goal 1 — Competitive Assessment</div>
+            <p>Provide a cross-platform view of developer ROI — comparing Horizon against mobile, console, PC, and other VR/MR platforms to establish whether the Horizon situation was an outlier.</p>
+          </div>
+          <div class="phase-box">
+            <div class="phase-label">Goal 2 — Identify Levers</div>
+            <p>Surface the key drivers of positive ROI, and identify the specific levers that could improve outcomes for Horizon developers and increase the efficacy of the existing funding model.</p>
+          </div>
+        </div>
+
+        <!-- Accordion: full methodology detail -->
+        <div class="accordion">
+          <button class="accordion-trigger" aria-expanded="false">
+            <div class="accordion-text">
+              <div class="accordion-label">Full methodology detail</div>
+              <div class="accordion-sublabel">Scope, sample, distribution, analysis approach</div>
+            </div>
+            <div class="accordion-icon">+</div>
+          </button>
+          <div class="accordion-body">
+            <div class="accordion-body-inner">
+              <table class="detail-table">
+                <thead>
+                  <tr><th>Dimension</th><th>Detail</th></tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Scope</td>
+                    <td>Developer profitability, ROI expectations and satisfaction, funding structure and needs, and how developers define success across platforms.</td>
+                  </tr>
+                  <tr>
+                    <td>Data collection period</td>
+                    <td>October 7 – November 7, 2025.</td>
+                  </tr>
+                  <tr>
+                    <td>Distribution channels</td>
+                    <td>Developer Discord channels, face-to-face recruitment at two developer expos (Paris Games Week, Belgium Unwrap), direct outreach, and research panels (Respondent.io, Prolific, Cint, EMI). Note: responses from multiple panels were discarded due to quality issues, resulting in a smaller but more credible sample from trusted channels.</td>
+                  </tr>
+                  <tr>
+                    <td>Audience and sample</td>
+                    <td>Developers with financial insight into development on mobile, console, PC (Steam and others), VR/MR, and UGC platforms. Final sample: 321 platform responses from 213 unique respondents. UGC platform responses excluded due to small data size.</td>
+                  </tr>
+                  <tr>
+                    <td>Analysis</td>
+                    <td>Descriptive statistics, t-tests, column proportion testing, and correlations between ROI satisfaction and key outcome drivers. Data analysed by platform, app category, and company size.</td>
+                  </tr>
+                  <tr>
+                    <td>Internal data integration</td>
+                    <td>ROI for Meta VR/MR was calculated using the in-product form (Phase 1) joined with app revenue data. This approach may limit direct comparability with external survey data and is noted as a caveat in interpretation.</td>
+                  </tr>
+                </tbody>
+              </table>
+              <div class="analysis-note" style="margin-top:16px">
+                <p><strong>A note on panel quality:</strong> Several recruitment panels were discarded after quality checks — responses showed suspicious patterns (e.g. implausible completion times, low response variance). This reduced the overall sample but meaningfully improved the credibility of findings. The face-to-face recruitment at developer expos provided an especially high-quality anchor for the data.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-divider"></div>
+
+      <!-- FINDINGS -->
+      <div class="case-section">
+        <div class="section-eyebrow">Findings</div>
+        <h3>Horizon Is a Major Outlier</h3>
+        <p>The benchmark study revealed that other major platforms see 36–57% of projects generating a positive return, with 58–83% at least breaking even. Internal data tells a sharply different story for Horizon OS.</p>
+
+        <!-- Platform bar chart -->
+        <div class="platform-chart-wrap">
+          <div class="platform-chart-title">Proportion of apps not breaking even, by platform</div>
+          <div class="platform-bars">
+            <div class="platform-row highlighted">
+              <div class="platform-label">Meta Horizon</div>
+              <div class="platform-track">
+                <div class="platform-fill highlighted" style="width:91%">91% losing money</div>
+              </div>
+              <div class="platform-pct">91%</div>
+            </div>
+            <div class="platform-row">
+              <div class="platform-label">Console</div>
+              <div class="platform-track">
+                <div class="platform-fill default" style="width:44%; color:var(--text-2); padding-left:8px">44%</div>
+              </div>
+              <div class="platform-pct">44%</div>
+            </div>
+            <div class="platform-row">
+              <div class="platform-label">PC (Steam + other)</div>
+              <div class="platform-track">
+                <div class="platform-fill default" style="width:57%; color:var(--text-2); padding-left:8px">57%</div>
+              </div>
+              <div class="platform-pct">57%</div>
+            </div>
+            <div class="platform-row">
+              <div class="platform-label">Mobile</div>
+              <div class="platform-track">
+                <div class="platform-fill default" style="width:36%; color:var(--text-2); padding-left:8px">36%</div>
+              </div>
+              <div class="platform-pct">36%</div>
+            </div>
+          </div>
+          <p class="chart-footnote">Horizon data from internal in-product form + revenue data. Other platforms from external benchmark survey (n=321 platform responses). Note: methodological differences between internal and survey data may affect direct comparability.</p>
+        </div>
+
+        <div class="highlight-box">
+          <p>Horizon OS was a substantial outlier — not merely underperforming, but operating in a fundamentally different ROI environment. This finding validated that the problem was Horizon-specific, not an industry-wide condition, and that targeted intervention was both necessary and potentially effective.</p>
+        </div>
+
+        <h3 style="margin-top:32px">Biggest Barriers for Developers</h3>
+        <p>Across the sample, developers consistently identified three categories of challenge that most often stood between effort and return:</p>
+        <ul class="findings-list">
+          <li><span class="find-icon">👥</span><span><strong>Audience scale</strong> — the addressable market for Horizon titles remains small relative to the investment required to serve it at a quality level the market expects</span></li>
+          <li><span class="find-icon">🔍</span><span><strong>Discoverability</strong> — titles struggle to be found organically; algorithmic and social discovery mechanisms are underdeveloped compared to competing platforms</span></li>
+          <li><span class="find-icon">📣</span><span><strong>Marketing cost and user acquisition</strong> — the cost of acquiring users on Horizon is disproportionately high, and developers lack the tools and reach to run efficient marketing campaigns</span></li>
+        </ul>
+
+        <h3 style="margin-top:32px">Performance Differences</h3>
+        <p>The data also revealed meaningful variation in outcomes within Horizon, pointing toward where the platform had already demonstrated some proof of concept:</p>
+        <div class="outcome-grid">
+          <div class="outcome-box">
+            <div class="outcome-title">Studio Size</div>
+            <p>Small studio projects achieved relatively better ROI outcomes compared to large studios, suggesting smaller-scale investments better match current market conditions.</p>
+          </div>
+          <div class="outcome-box">
+            <div class="outcome-title">Content Category</div>
+            <p>Video games performed worst, with 34% seeing no return at all. Productivity, learning, and social/lifestyle/entertainment apps showed stronger ROI patterns — categories that leverage VR's unique affordances.</p>
+          </div>
+          <div class="outcome-box">
+            <div class="outcome-title">Funding Structure</div>
+            <p>VR/MR teams relied more on client or contract work (35%) and VC funding (40%), with more fragmented funding models than developers on other platforms.</p>
+          </div>
+          <div class="outcome-box">
+            <div class="outcome-title">Critical Lever</div>
+            <p>ROI is more strongly tied to <em>ongoing investment</em> — particularly marketing and user acquisition — than to initial development investment. This was especially pronounced for smaller studios.</p>
+          </div>
+        </div>
+
+        <!-- Marketing/ROI scatter plot -->
+        <h3 style="margin-top:32px">Marketing Investment as the Key Driver</h3>
+        <p>The correlation between ongoing marketing and user acquisition spend and ROI satisfaction was one of the strongest signals in the dataset — outperforming initial development investment as a predictor of positive return.</p>
+        <div class="illus-frame">
+          <svg viewBox="0 0 340 240" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <!-- Axes -->
+            <line x1="48" y1="200" x2="310" y2="200" stroke="#D1D5DB" stroke-width="1.5"/>
+            <line x1="48" y1="200" x2="48"  y2="20"  stroke="#D1D5DB" stroke-width="1.5"/>
+            <!-- Grid lines -->
+            <line x1="48" y1="160" x2="310" y2="160" stroke="#E5E7EB" stroke-width="0.5" stroke-dasharray="3 3"/>
+            <line x1="48" y1="120" x2="310" y2="120" stroke="#E5E7EB" stroke-width="0.5" stroke-dasharray="3 3"/>
+            <line x1="48" y1="80"  x2="310" y2="80"  stroke="#E5E7EB" stroke-width="0.5" stroke-dasharray="3 3"/>
+            <line x1="48" y1="40"  x2="310" y2="40"  stroke="#E5E7EB" stroke-width="0.5" stroke-dasharray="3 3"/>
+            <!-- Scatter points -->
+            <circle cx="68"  cy="188" r="4" fill="#BFDBFE" opacity="0.8"/>
+            <circle cx="80"  cy="182" r="4" fill="#BFDBFE" opacity="0.8"/>
+            <circle cx="75"  cy="176" r="4" fill="#BFDBFE" opacity="0.8"/>
+            <circle cx="95"  cy="172" r="4" fill="#BFDBFE" opacity="0.8"/>
+            <circle cx="88"  cy="165" r="4" fill="#BFDBFE" opacity="0.8"/>
+            <circle cx="110" cy="162" r="4" fill="#BFDBFE" opacity="0.8"/>
+            <circle cx="100" cy="155" r="4" fill="#93C5FD" opacity="0.85"/>
+            <circle cx="125" cy="150" r="4" fill="#93C5FD" opacity="0.85"/>
+            <circle cx="115" cy="142" r="4" fill="#93C5FD" opacity="0.85"/>
+            <circle cx="140" cy="138" r="4" fill="#93C5FD" opacity="0.85"/>
+            <circle cx="132" cy="128" r="4" fill="#60A5FA" opacity="0.9"/>
+            <circle cx="155" cy="124" r="4" fill="#60A5FA" opacity="0.9"/>
+            <circle cx="148" cy="115" r="4" fill="#60A5FA" opacity="0.9"/>
+            <circle cx="170" cy="110" r="4" fill="#60A5FA" opacity="0.9"/>
+            <circle cx="162" cy="100" r="4" fill="#3B82F6" opacity="0.9"/>
+            <circle cx="185" cy="96"  r="4" fill="#3B82F6" opacity="0.9"/>
+            <circle cx="178" cy="86"  r="4" fill="#3B82F6" opacity="0.9"/>
+            <circle cx="200" cy="82"  r="4" fill="#2563EB" opacity="0.95"/>
+            <circle cx="218" cy="75"  r="4" fill="#2563EB" opacity="0.95"/>
+            <circle cx="210" cy="65"  r="4" fill="#1D4ED8"/>
+            <circle cx="235" cy="60"  r="4" fill="#1D4ED8"/>
+            <circle cx="228" cy="50"  r="4" fill="#1D4ED8"/>
+            <circle cx="252" cy="48"  r="4" fill="#1D4ED8"/>
+            <circle cx="268" cy="40"  r="4" fill="#1D4ED8"/>
+            <circle cx="280" cy="35"  r="4" fill="#1D4ED8"/>
+            <!-- Curve fit line (quadratic curve path) -->
+            <path d="M 60 192 Q 160 150 290 32" stroke="#1D4ED8" stroke-width="2" fill="none" stroke-dasharray="5 3" opacity="0.7"/>
+            <!-- Axis labels -->
+            <text x="179" y="218" text-anchor="middle" font-size="9" fill="#6B7280" font-family="Inter,sans-serif" font-weight="500">Return on Investment</text>
+            <text x="18" y="110" text-anchor="middle" font-size="9" fill="#6B7280" font-family="Inter,sans-serif" font-weight="500" transform="rotate(-90 18 110)">Marketing &amp; UA Spend</text>
+            <!-- Axis ticks -->
+            <text x="68"  y="213" text-anchor="middle" font-size="7.5" fill="#9CA3AF" font-family="Inter,sans-serif">Low</text>
+            <text x="179" y="213" text-anchor="middle" font-size="7.5" fill="#9CA3AF" font-family="Inter,sans-serif">Medium</text>
+            <text x="290" y="213" text-anchor="middle" font-size="7.5" fill="#9CA3AF" font-family="Inter,sans-serif">High</text>
+            <!-- Legend -->
+            <line x1="200" y1="188" x2="218" y2="188" stroke="#1D4ED8" stroke-width="2" stroke-dasharray="4 2"/>
+            <text x="223" y="192" font-size="8" fill="#6B7280" font-family="Inter,sans-serif">Trend</text>
+          </svg>
+        </div>
+      </div>
+
+      <div class="section-divider"></div>
+
+      <!-- RECOMMENDATIONS -->
+      <div class="case-section">
+        <div class="section-eyebrow">Recommendations</div>
+        <h3>Two Strategic Pivots</h3>
+        <p>The findings pointed clearly toward two areas where Meta could have the highest leverage — one structural, one tied to how the existing funding programme was being deployed.</p>
+
+        <div class="outcome-grid" style="margin-top: 20px">
+          <div class="outcome-box">
+            <div class="outcome-title">Make Discoverability a Core Priority</div>
+            <p>Invest in ranking signals and algorithmic promotion to surface titles more effectively. Strengthen organic reach through community and social discovery features to reduce the dependence on paid user acquisition.</p>
+          </div>
+          <div class="outcome-box">
+            <div class="outcome-title">Reorient the Funding Programme</div>
+            <p>Expand from development funding to include ongoing investment in marketing and user acquisition — the proven ROI driver. Simultaneously, shift category focus away from video games (worst performing) toward lifestyle, productivity, and social apps.</p>
+          </div>
+        </div>
+
+        <div class="accordion" style="margin-top: 24px">
+          <button class="accordion-trigger" aria-expanded="false">
+            <div class="accordion-text">
+              <div class="accordion-label">Rationale: why reorient toward marketing funding?</div>
+              <div class="accordion-sublabel">The case for ongoing investment vs. upfront development grants</div>
+            </div>
+            <div class="accordion-icon">+</div>
+          </button>
+          <div class="accordion-body">
+            <div class="accordion-body-inner">
+              <p>The correlation data pointed to a clear and counterintuitive insight: initial development investment was a relatively weak predictor of whether a title would recoup. What actually moved the needle was what happened after launch — specifically, the ability to drive sustained user acquisition.</p>
+              <p style="margin-top:12px">This has direct implications for how the funding programme should work. Development grants are awarded pre-launch, at a point where it's difficult to predict which titles will succeed. Marketing and user acquisition funding can be awarded post-launch, tied to early traction signals — meaning it can be targeted at titles with demonstrated product-market fit.</p>
+              <p style="margin-top:12px">The category finding reinforced this. Video games are high-effort, high-cost, and more dependent on broad distribution than lifestyle or productivity apps. Shifting category focus isn't about abandoning gaming on Horizon — it's about improving the odds on funded titles by backing categories that are structurally better suited to the platform's current scale.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-divider"></div>
+
+      <!-- OUTCOMES -->
+      <div class="case-section">
+        <div class="section-eyebrow">Outcome</div>
+        <h3>Funding Strategy Reoriented</h3>
+        <p>The combined work — internal cost data infrastructure, joined with competitive benchmark research — gave the Content and Marketing team the clearest picture they had ever had of the funding programme's actual effectiveness and the underlying levers available to improve it.</p>
+        <p>The programme subsequently pivoted to support developers in marketing and user acquisition, rather than limiting investment to development. This shift in strategy led to substantially better returns for funded developers, and gave the team a much more defensible basis for investment decisions going forward.</p>
+
+        <div class="highlight-box" style="margin-top:24px">
+          <p>Critically, the work also produced a permanent data infrastructure improvement. The in-product cost form continued collecting data, meaning the team now had an ongoing, systematic view of developer economics — not just a point-in-time snapshot. Research had built something that would outlast the study.</p>
+        </div>
+      </div>
+
+    </div><!-- /content-card -->
+
+  </main>
+
+  <script>
+    // ── Accordion ──────────────────────────────────────
+    document.querySelectorAll('.accordion-trigger').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const expanded = btn.getAttribute('aria-expanded') === 'true';
+        btn.setAttribute('aria-expanded', !expanded);
+        const body = btn.nextElementSibling;
+        body.style.maxHeight = expanded ? '0' : body.scrollHeight + 'px';
+        // Update icon text
+        const icon = btn.querySelector('.accordion-icon');
+        if (icon) icon.textContent = expanded ? '+' : '+';
+      });
+    });
+
+    // ── Mobile hamburger ──────────────────────────────
+    (function () {
+      const btn      = document.querySelector('.hamburger');
+      const sidebar  = document.getElementById('sidebar');
+      const backdrop = document.querySelector('.nav-backdrop');
+      if (!btn) return;
+
+      function setOpen(open) {
+        btn.setAttribute('aria-expanded', open);
+        btn.classList.toggle('open', open);
+        sidebar.classList.toggle('open', open);
+        backdrop.classList.toggle('visible', open);
+        document.body.style.overflow = open ? 'hidden' : '';
+      }
+
+      btn.addEventListener('click', () => setOpen(!sidebar.classList.contains('open')));
+      backdrop.addEventListener('click', () => setOpen(false));
+
+      sidebar.querySelectorAll('a').forEach(a =>
+        a.addEventListener('click', () => { if (window.innerWidth <= 768) setOpen(false); })
+      );
+    })();
+  </script>
+
+</body>
+</html>
