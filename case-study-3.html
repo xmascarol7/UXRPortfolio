@@ -1,0 +1,977 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NetzDG Legal Reporting — Bryan Carroll</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=DM+Serif+Display&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:           #FAFAFA;
+      --bg-2:         #F4F4F5;
+      --bg-3:         #EBEBED;
+      --text-1:       #111827;
+      --text-2:       #4B5563;
+      --text-3:       #9CA3AF;
+      --accent:       #1D4ED8;
+      --accent-light: #EFF6FF;
+      --accent-mid:   #BFDBFE;
+      --border:       #E5E7EB;
+      --nav-w:        260px;
+      --serif:        'DM Serif Display', Georgia, serif;
+      --sans:         'Inter', system-ui, sans-serif;
+      --radius:       12px;
+      --transition:   0.2s ease;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--sans);
+      background: var(--bg);
+      color: var(--text-1);
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* ── SIDEBAR ─────────────────────────────────── */
+    nav#sidebar {
+      position: fixed; top: 0; left: 0;
+      width: var(--nav-w); height: 100vh;
+      background: #fff; border-right: 1px solid var(--border);
+      display: flex; flex-direction: column;
+      padding: 48px 32px; z-index: 100; gap: 0;
+    }
+    .nav-identity { margin-bottom: 48px; }
+    .nav-identity .role {
+      font-size: 0.75rem; font-weight: 500; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--text-3); margin-top: 6px;
+    }
+    .nav-section-label {
+      font-size: 0.65rem; font-weight: 600; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--text-3); margin-bottom: 12px;
+    }
+    .nav-links { list-style: none; margin-bottom: 36px; }
+    .nav-links li + li { margin-top: 2px; }
+    .nav-links a {
+      display: block; font-size: 0.875rem; font-weight: 400;
+      color: var(--text-2); text-decoration: none;
+      padding: 7px 12px; border-radius: 8px;
+      transition: background var(--transition), color var(--transition);
+    }
+    .nav-links a:hover, .nav-links a.active { background: var(--accent-light); color: var(--accent); }
+    .nav-links a.active { font-weight: 500; }
+    .nav-divider { height: 1px; background: var(--border); margin-bottom: 36px; }
+    .nav-footer { margin-top: auto; display: flex; flex-direction: column; gap: 12px; }
+    .nav-footer a { font-size: 0.8rem; color: var(--text-3); text-decoration: none; transition: color var(--transition); }
+    .nav-footer a:hover { color: var(--accent); }
+
+    /* ── MAIN ────────────────────────────────────── */
+    main { margin-left: var(--nav-w); flex: 1; max-width: 900px; padding: 80px 64px 120px; }
+
+    /* ── TYPOGRAPHY ──────────────────────────────── */
+    h2 { font-family: var(--serif); font-size: clamp(1.75rem, 3vw, 2.25rem); line-height: 1.2; color: var(--text-1); margin-bottom: 20px; }
+    h3 { font-size: 1rem; font-weight: 600; color: var(--text-1); margin-bottom: 10px; }
+    p { font-size: 0.9375rem; line-height: 1.75; color: var(--text-2); }
+    p + p { margin-top: 14px; }
+    strong { color: var(--text-1); font-weight: 600; }
+
+    /* ── BACK LINK ───────────────────────────────── */
+    .back-link {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 0.8rem; color: var(--text-3); text-decoration: none;
+      margin-bottom: 32px; transition: color var(--transition);
+    }
+    .back-link:hover { color: var(--accent); }
+
+    /* ── CASE HERO ───────────────────────────────── */
+    .case-hero {
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 48px 56px;
+      display: grid; grid-template-columns: 1fr 220px;
+      gap: 40px; align-items: center;
+      margin-bottom: 0;
+    }
+    .company-tag {
+      display: inline-block; font-size: 0.65rem; font-weight: 700;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--accent); background: var(--accent-light);
+      padding: 4px 10px; border-radius: 999px; margin-bottom: 16px;
+    }
+    .method-pills { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+    .method-pill {
+      font-size: 0.75rem; font-weight: 500;
+      padding: 5px 12px; border-radius: 999px;
+      border: 1px solid var(--border); color: var(--text-2);
+    }
+
+    /* ── CONTENT CARD ────────────────────────────── */
+    .content-card {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-top: none;
+      border-radius: 0 0 var(--radius) var(--radius);
+      padding: 56px;
+    }
+
+    /* ── SECTION SPACING ─────────────────────────── */
+    .case-section { margin-bottom: 48px; }
+    .case-section:last-child { margin-bottom: 0; }
+    .section-divider { height: 1px; background: var(--border); margin: 48px 0; }
+
+    .section-eyebrow {
+      font-size: 0.65rem; font-weight: 700; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--accent); margin-bottom: 10px;
+    }
+
+    /* ── HIGHLIGHT BOX ───────────────────────────── */
+    .highlight-box {
+      background: var(--accent-light);
+      border-left: 3px solid var(--accent);
+      border-radius: 0 8px 8px 0;
+      padding: 16px 20px; margin: 20px 0;
+    }
+    .highlight-box p { color: var(--text-1); font-size: 0.875rem; }
+
+    /* ── WARNING BOX ─────────────────────────────── */
+    .warning-box {
+      background: #FEF3C7;
+      border-left: 3px solid #F59E0B;
+      border-radius: 0 8px 8px 0;
+      padding: 16px 20px; margin: 20px 0;
+    }
+    .warning-box p { color: #92400E; font-size: 0.875rem; }
+
+    /* ── STAT ROW ────────────────────────────────── */
+    .stat-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 16px; margin: 24px 0; }
+    .stat-box { background: var(--bg-2); border-radius: 10px; padding: 20px; text-align: center; }
+    .stat-number { font-family: var(--serif); font-size: 2rem; color: var(--text-1); line-height: 1; margin-bottom: 6px; }
+    .stat-label { font-size: 0.75rem; color: var(--text-3); font-weight: 500; line-height: 1.3; }
+
+    /* ── PHASE GRID ──────────────────────────────── */
+    .phase-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 20px 0; }
+    .phase-box { background: var(--bg-2); border-radius: 10px; padding: 20px 24px; }
+    .phase-label { font-size: 0.65rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 8px; }
+    .phase-box p { font-size: 0.85rem; }
+
+    /* ── FINDINGS LIST ───────────────────────────── */
+    .findings-list { list-style: none; margin: 16px 0; }
+    .findings-list li {
+      padding: 14px 0; border-bottom: 1px solid var(--border);
+      display: flex; gap: 14px; font-size: 0.875rem; color: var(--text-2); line-height: 1.6;
+    }
+    .findings-list li:last-child { border-bottom: none; }
+    .find-icon { font-size: 1rem; flex-shrink: 0; margin-top: 2px; }
+
+    /* ── OUTCOME GRID ────────────────────────────── */
+    .outcome-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 20px 0; }
+    .outcome-box { border: 1px solid var(--border); border-radius: 10px; padding: 20px 24px; }
+    .outcome-title { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-2); margin-bottom: 8px; }
+    .outcome-box p { font-size: 0.85rem; }
+
+    /* ── ROLE LIST ───────────────────────────────── */
+    .role-list { margin: 16px 0; display: flex; flex-direction: column; gap: 8px; }
+    .role-item { display: flex; gap: 10px; align-items: flex-start; font-size: 0.875rem; color: var(--text-2); line-height: 1.6; }
+    .role-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); flex-shrink: 0; margin-top: 8px; }
+
+    /* ── ACCORDION ───────────────────────────────── */
+    .accordion { border: 1px solid var(--border); border-radius: 10px; margin-top: 16px; overflow: hidden; }
+    .accordion + .accordion { margin-top: 10px; }
+
+    .accordion-trigger {
+      width: 100%; display: flex; align-items: center; justify-content: space-between;
+      gap: 16px; padding: 16px 20px; background: var(--bg-2);
+      border: none; cursor: pointer; text-align: left;
+      transition: background var(--transition);
+    }
+    .accordion-trigger:hover { background: var(--bg-3); }
+    .accordion-trigger[aria-expanded="true"] { background: var(--accent-light); }
+
+    .accordion-label {
+      font-size: 0.825rem; font-weight: 500; color: var(--text-1);
+    }
+    .accordion-sublabel {
+      font-size: 0.75rem; color: var(--text-3); margin-top: 2px;
+    }
+    .accordion-text { flex: 1; }
+
+    .accordion-icon {
+      width: 26px; height: 26px; border-radius: 50%;
+      border: 1.5px solid var(--border); background: #fff;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem; line-height: 1; flex-shrink: 0; color: var(--text-2);
+      transition: transform 0.25s ease, background var(--transition), border-color var(--transition), color var(--transition);
+    }
+    .accordion-trigger[aria-expanded="true"] .accordion-icon {
+      transform: rotate(45deg);
+      background: var(--accent-light); border-color: var(--accent); color: var(--accent);
+    }
+
+    .accordion-body {
+      max-height: 0; overflow: hidden;
+      transition: max-height 0.35s ease;
+    }
+    .accordion-body-inner { padding: 24px 20px; border-top: 1px solid var(--border); }
+    .accordion-body-inner p { font-size: 0.875rem; }
+    .accordion-body-inner p + p { margin-top: 12px; }
+
+    /* ── CHART WRAP ──────────────────────────────── */
+    .chart-wrap { margin: 24px 0; }
+    .chart-title { font-size: 0.75rem; font-weight: 600; color: var(--text-2); margin-bottom: 12px; letter-spacing: 0.04em; text-transform: uppercase; }
+
+    /* ── DETAIL TABLE ────────────────────────────── */
+    .detail-table { width: 100%; border-collapse: collapse; font-size: 0.825rem; margin-top: 12px; }
+    .detail-table th { text-align: left; font-size: 0.65rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-3); padding: 8px 12px; border-bottom: 1px solid var(--border); }
+    .detail-table td { padding: 10px 12px; border-bottom: 1px solid var(--border); color: var(--text-2); vertical-align: top; line-height: 1.5; }
+    .detail-table tr:last-child td { border-bottom: none; }
+    .detail-table td:first-child { font-weight: 500; color: var(--text-1); white-space: nowrap; }
+
+    /* ── INLINE TAG ──────────────────────────────── */
+    .inline-tag {
+      display: inline-block; font-size: 0.7rem; font-weight: 500;
+      padding: 2px 8px; border-radius: 999px;
+      background: var(--bg-2); color: var(--text-2);
+      margin: 2px;
+    }
+
+    /* ── MOCKUP CONTAINER ────────────────────────── */
+    .mockup-wrap {
+      margin: 28px 0;
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 28px 24px 20px;
+    }
+    .mockup-caption {
+      font-size: 0.7rem; font-weight: 600; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--text-3);
+      text-align: center; margin-top: 14px;
+    }
+    .mockup-pair {
+      display: flex; gap: 20px; justify-content: center; align-items: flex-start;
+    }
+    .mockup-item { flex: 1; max-width: 240px; text-align: center; }
+    .mockup-item-label {
+      font-size: 0.72rem; font-weight: 600; color: var(--text-2);
+      margin-top: 10px;
+    }
+    .mockup-item-sublabel {
+      font-size: 0.7rem; color: var(--text-3); margin-top: 2px;
+    }
+
+    /* ── ANALYSIS NOTE ───────────────────────────── */
+    .analysis-note {
+      background: var(--bg-2); border-radius: 8px; padding: 14px 16px; margin-top: 14px;
+    }
+    .analysis-note p { font-size: 0.825rem; }
+
+    /* ══════════════════════════════════════════════════
+       HAMBURGER BUTTON
+    ══════════════════════════════════════════════════ */
+    .mobile-topbar {
+      display: none;
+      position: fixed; top: 0; left: 0; right: 0; z-index: 300;
+      height: 56px;
+      background: #fff; border-bottom: 1px solid var(--border);
+      align-items: center; gap: 12px;
+      padding: 0 16px;
+    }
+    .mobile-topbar-name {
+      font-family: var(--serif);
+      font-size: 1rem;
+      color: var(--text-1);
+    }
+
+    .hamburger {
+      display: flex;
+      flex-direction: column; justify-content: center; align-items: center; gap: 5px;
+      width: 36px; height: 36px; flex-shrink: 0;
+      background: var(--bg-2); border: 1px solid var(--border);
+      border-radius: 8px; cursor: pointer; padding: 0;
+    }
+    .hamburger span {
+      display: block; width: 18px; height: 2px;
+      background: var(--text-1); border-radius: 2px;
+      transition: transform 0.25s ease, opacity 0.2s ease;
+    }
+    .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+    .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    .nav-backdrop {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,0.25); z-index: 150;
+      opacity: 0; transition: opacity 0.3s ease; pointer-events: none;
+    }
+    .nav-backdrop.visible { opacity: 1; pointer-events: all; }
+
+    /* ══════════════════════════════════════════════════
+       RESPONSIVE — SHARED (≤768px)
+    ══════════════════════════════════════════════════ */
+    @media (max-width: 768px) {
+      .mobile-topbar { display: flex; }
+      .nav-backdrop { display: block; }
+
+      nav#sidebar {
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+        z-index: 200;
+      }
+      nav#sidebar.open {
+        transform: translateX(0);
+        box-shadow: 4px 0 32px rgba(0,0,0,0.15);
+      }
+
+      main {
+        margin-left: 0 !important;
+        padding: 80px 20px 80px;
+        max-width: 100%;
+      }
+
+      h2 { font-size: clamp(1.4rem, 6vw, 2rem); }
+      p  { font-size: 0.9rem; }
+    }
+
+    @media (max-width: 768px) {
+      .case-hero {
+        grid-template-columns: 1fr;
+        padding: 32px 28px;
+        gap: 0;
+      }
+      .case-hero > svg,
+      .case-hero > div:last-child { display: none; }
+      .method-pills { gap: 6px; }
+      .method-pill { font-size: 0.7rem; padding: 4px 10px; }
+      .content-card { padding: 32px 20px; }
+      .phase-grid { grid-template-columns: 1fr; }
+      .outcome-grid { grid-template-columns: 1fr; }
+      .stat-row { grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); }
+      .stat-number { font-size: 1.6rem; }
+      .accordion-trigger { padding: 14px 16px; }
+      .back-link { margin-bottom: 20px; }
+      .mockup-pair { flex-direction: column; align-items: center; }
+      .accordion-body-inner { overflow-x: auto; }
+      .detail-table { min-width: 480px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Mobile top bar -->
+  <div class="mobile-topbar">
+    <button class="hamburger" aria-label="Open navigation" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+    <span class="mobile-topbar-name">Bryan Carroll</span>
+  </div>
+  <div class="nav-backdrop"></div>
+
+  <nav id="sidebar">
+    <div class="nav-identity">
+      <a href="index.html" style="font-family:var(--serif);font-size:1.25rem;color:var(--text-1);text-decoration:none;line-height:1.2;display:block;">Bryan Carroll</a>
+      <div class="role">User Research &amp; Insights</div>
+    </div>
+    <div class="nav-section-label">Work</div>
+    <ul class="nav-links">
+      <li><a href="case-study-1.html">Business Verification</a></li>
+      <li><a href="case-study-2.html">Integrity Measurement</a></li>
+      <li><a href="case-study-3.html" class="active">NetzDG Reporting</a></li>
+    </ul>
+    <div class="nav-divider"></div>
+    <div class="nav-section-label">About</div>
+    <ul class="nav-links">
+      <li><a href="index.html#about">About me</a></li>
+      <li><a href="index.html#resume">Résumé</a></li>
+      <li><a href="index.html#contact">Contact</a></li>
+    </ul>
+    <div class="nav-footer">
+      <a href="mailto:bryan@carroll-parker.me">bryan@carroll-parker.me</a>
+    </div>
+  </nav>
+
+  <main>
+    <a class="back-link" href="index.html">← Back to work</a>
+
+    <!-- HERO -->
+    <div class="case-hero">
+      <div>
+        <span class="company-tag">Meta · Policy &amp; Integrity</span>
+        <h2>NetzDG Legal<br>Content Reporting</h2>
+        <p style="font-size:0.9rem;color:var(--text-2);line-height:1.65;max-width:440px">Qualitative research into user mental models around Germany's NetzDG law — and data-driven advocacy to a government regulator when a mandated implementation caused a 13% drop in high-severity content reporting.</p>
+        <div class="method-pills">
+          <span class="method-pill">Individual Depth Interviews</span>
+          <span class="method-pill">Focus Groups</span>
+          <span class="method-pill">Card Sort</span>
+          <span class="method-pill">Usability Testing</span>
+          <span class="method-pill">Co-creation</span>
+          <span class="method-pill">A/B Testing</span>
+          <span class="method-pill">Regulatory Advocacy</span>
+        </div>
+      </div>
+      <!-- Hero SVG: line chart showing metric drop and recovery -->
+      <svg viewBox="0 0 200 180" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <line x1="20" y1="155" x2="185" y2="155" stroke="#D1D5DB" stroke-width="1"/>
+        <line x1="20" y1="115" x2="185" y2="115" stroke="#E5E7EB" stroke-width="0.5" stroke-dasharray="3 3"/>
+        <line x1="20" y1="75"  x2="185" y2="75"  stroke="#E5E7EB" stroke-width="0.5" stroke-dasharray="3 3"/>
+        <line x1="20" y1="35"  x2="185" y2="35"  stroke="#E5E7EB" stroke-width="0.5" stroke-dasharray="3 3"/>
+        <!-- Line: flat, then drops, then flat at lower level -->
+        <polyline
+          points="20,55 95,55 108,118 185,118"
+          fill="none" stroke="#BFDBFE" stroke-width="2.5"
+          stroke-linejoin="round" stroke-linecap="round"/>
+        <!-- Drop zone shading -->
+        <polygon points="20,55 95,55 108,118 185,118 185,155 20,155"
+          fill="#EFF6FF" opacity="0.6"/>
+        <!-- Drop indicator -->
+        <line x1="101" y1="35" x2="101" y2="155" stroke="#F59E0B" stroke-width="1.5" stroke-dasharray="4 3"/>
+        <!-- Recovery line (after advocacy) -->
+        <polyline
+          points="108,118 185,55"
+          fill="none" stroke="#1D4ED8" stroke-width="2" stroke-dasharray="5 3"
+          stroke-linejoin="round" stroke-linecap="round"/>
+        <!-- Data point dots -->
+        <circle cx="20"  cy="55"  r="3.5" fill="#BFDBFE"/>
+        <circle cx="95"  cy="55"  r="3.5" fill="#BFDBFE"/>
+        <circle cx="108" cy="118" r="3.5" fill="#F59E0B"/>
+        <circle cx="185" cy="55"  r="3.5" fill="#1D4ED8"/>
+        <!-- Legend -->
+        <circle cx="28" cy="18" r="3.5" fill="#BFDBFE"/>
+        <text x="36" y="22" font-size="8" fill="#9CA3AF" font-family="Inter,sans-serif">Before</text>
+        <line x1="95" y1="18" x2="107" y2="18" stroke="#1D4ED8" stroke-width="2" stroke-dasharray="4 2"/>
+        <text x="112" y="22" font-size="8" fill="#9CA3AF" font-family="Inter,sans-serif">Mitigated</text>
+      </svg>
+    </div>
+
+    <div class="content-card">
+
+      <!-- CONTEXT -->
+      <div class="case-section">
+        <div class="section-eyebrow">Context</div>
+        <h3>A Law, Two Reporting Flows, and a Difficult Choice</h3>
+        <p>Germany's <strong>Netzwerkdurchsetzungsgesetz (NetzDG)</strong> law required Facebook to introduce a dedicated legal reporting flow for specific categories of harmful content, sitting alongside the existing Community Standards (CS) reporting flow. This created an unusual product challenge: users reporting objectionable content now had to decide, in the moment, whether to route their report through German law or through Facebook's own rules.</p>
+        <p>The research question was deceptively simple: did users understand the difference, and could they reliably make that choice?</p>
+
+        <div class="stat-row">
+          <div class="stat-box">
+            <div class="stat-number">2</div>
+            <div class="stat-label">Parallel reporting<br>flows to navigate</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-number">12</div>
+            <div class="stat-label">Individual depth<br>interviews conducted</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-number">5</div>
+            <div class="stat-label">Design concepts<br>tested with users</div>
+          </div>
+        </div>
+
+        <div class="highlight-box">
+          <p>What began as a generative study to inform design became critical evidence in a direct regulatory conversation — ultimately changing how the law was implemented on the platform.</p>
+        </div>
+      </div>
+
+      <div class="section-divider"></div>
+
+      <!-- RESEARCH GOALS -->
+      <div class="case-section">
+        <div class="section-eyebrow">Research Goals</div>
+        <h3>Key Questions</h3>
+        <ul class="findings-list">
+          <li><span class="find-icon">🎯</span><span>What leads people to report a post via legal (NetzDG) reporting versus Community Standards reporting — and what drives that choice?</span></li>
+          <li><span class="find-icon">⚖️</span><span>Is it true that people perceive NetzDG reporting as being for more severe content? What drives that perception?</span></li>
+          <li><span class="find-icon">📋</span><span>How can the scope of legal reporting be defined clearly and comprehensibly so users can make an informed decision?</span></li>
+        </ul>
+      </div>
+
+      <div class="section-divider"></div>
+
+      <!-- APPROACH -->
+      <div class="case-section">
+        <div class="section-eyebrow">Approach</div>
+        <h3>Qualitative Study in Berlin</h3>
+        <p>Conducted qualitative research in Berlin, Germany, leveraging MindSpark to moderate the research in users' native language, to understand user mental models around both reporting flows. The approach combined individual depth interviews with focus groups, and layered in several interactive exercises to probe decision-making in detail.</p>
+
+        <div class="phase-grid">
+          <div class="phase-box">
+            <div class="phase-label">Individual Depth Interviews</div>
+            <p>Twelve 60-minute IDIs exploring how participants thought about NetzDG and CS reporting, and what drove their sense of which flow was "appropriate" for different content types.</p>
+          </div>
+          <div class="phase-box">
+            <div class="phase-label">Focus Groups</div>
+            <p>Two 90-minute focus groups to observe collective reasoning around the decision to report — surfacing group norms and shared mental models that individual interviews alone might miss.</p>
+          </div>
+        </div>
+
+        <p style="margin-top:16px">Participants were split evenly: 50% had no Facebook account (non-account holders), and 50% had recently reported content to Facebook (active reporters). This ensured the research captured both general public awareness of NetzDG and the experience of people who had actually used the reporting system.</p>
+
+        <!-- ACCORDION: Study activities detail -->
+        <div class="accordion">
+          <button class="accordion-trigger" aria-expanded="false">
+            <div class="accordion-text">
+              <div class="accordion-label">Study activities and methodology detail</div>
+              <div class="accordion-sublabel">Card sort, usability testing, co-creation exercise</div>
+            </div>
+            <div class="accordion-icon">+</div>
+          </button>
+          <div class="accordion-body">
+            <div class="accordion-body-inner">
+              <table class="detail-table">
+                <thead>
+                  <tr><th>Activity</th><th>Purpose &amp; Design</th></tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Closed card sort</td>
+                    <td>Participants classified types of reported content by perceived severity and allocated them to either NetzDG or Community Standards. This directly tested whether users could reliably distinguish the two — and surfaced the heuristics they were relying on when they couldn't.</td>
+                  </tr>
+                  <tr>
+                    <td>Usability testing — 5 concepts</td>
+                    <td>Five distinct reporting flow concepts were tested: <strong>Current/Recommended Actions</strong> (control), <strong>Subtext</strong> (contextual info below options), <strong>Q&amp;A</strong> (guided decision tree), <strong>Chevron Split</strong> (diverging paths), and <strong>Opt-In</strong> (soft-language NetzDG entry). Each was designed to test a different hypothesis about how to reduce decisional burden.</td>
+                  </tr>
+                  <tr>
+                    <td>Co-creation exercise</td>
+                    <td>Participants worked to design their "ideal" reporting solution from scratch, unconstrained by the existing concepts. This surfaced needs and preferences that none of the pre-built concepts had fully addressed — particularly around language and uncertainty.</td>
+                  </tr>
+                </tbody>
+              </table>
+              <div class="analysis-note" style="margin-top: 16px">
+                <p><strong>Participant split rationale:</strong> Including non-account holders was a deliberate choice. NetzDG as a law applies to German residents regardless of whether they use Facebook — and understanding public awareness of the law (not just active user awareness) was important context for how the reporting flow should be framed and labelled.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-divider"></div>
+
+      <!-- FINDINGS -->
+      <div class="case-section">
+        <div class="section-eyebrow">Findings</div>
+        <h3>Users Couldn't Reliably Choose — and Didn't Want To</h3>
+        <p>The central finding was stark: participants could not say with certainty what NetzDG covers, and were deeply reluctant to make what felt like a legal determination. The decision between two reporting paths created anxiety rather than clarity.</p>
+
+        <!-- IMAGE 1: Two bottom sheets -->
+        <div class="mockup-wrap">
+          <div class="chart-title">The contrast users experienced: two very different reporting surfaces</div>
+          <div class="mockup-pair">
+            <div class="mockup-item">
+              <!-- Simple bottom sheet (Facebook CS flow) -->
+              <svg viewBox="0 0 220 260" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:220px;display:block;margin:0 auto" aria-label="Simple Facebook reporting flow: clean with few options and a clear submit button">
+                <!-- Sheet background -->
+                <rect x="4" y="4" width="212" height="252" rx="16" fill="#fff" stroke="#E5E7EB" stroke-width="1.5"/>
+                <!-- Handle bar -->
+                <rect x="87" y="16" width="46" height="5" rx="2.5" fill="#D1D5DB"/>
+                <!-- Title -->
+                <text x="110" y="48" text-anchor="middle" font-size="13" font-weight="600" fill="#111827" font-family="Inter,sans-serif">Report content</text>
+                <text x="110" y="63" text-anchor="middle" font-size="9" fill="#9CA3AF" font-family="Inter,sans-serif">Why are you reporting this?</text>
+                <!-- Category pills (3, simple) -->
+                <rect x="18" y="78" width="84" height="26" rx="13" fill="#EFF6FF" stroke="#BFDBFE" stroke-width="1.5"/>
+                <text x="60" y="95" text-anchor="middle" font-size="9.5" fill="#1D4ED8" font-weight="500" font-family="Inter,sans-serif">Hate speech</text>
+                <rect x="114" y="78" width="68" height="26" rx="13" fill="#EFF6FF" stroke="#BFDBFE" stroke-width="1.5"/>
+                <text x="148" y="95" text-anchor="middle" font-size="9.5" fill="#1D4ED8" font-weight="500" font-family="Inter,sans-serif">Violence</text>
+                <rect x="18" y="114" width="94" height="26" rx="13" fill="#EFF6FF" stroke="#BFDBFE" stroke-width="1.5"/>
+                <text x="65" y="131" text-anchor="middle" font-size="9.5" fill="#1D4ED8" font-weight="500" font-family="Inter,sans-serif">Harassment</text>
+                <rect x="122" y="114" width="80" height="26" rx="13" fill="#F4F4F5" stroke="#E5E7EB" stroke-width="1.5"/>
+                <text x="162" y="131" text-anchor="middle" font-size="9.5" fill="#6B7280" font-weight="500" font-family="Inter,sans-serif">Terrorism</text>
+                <!-- Spacer / separator -->
+                <line x1="18" y1="158" x2="202" y2="158" stroke="#E5E7EB" stroke-width="1"/>
+                <!-- Large CTA button -->
+                <rect x="18" y="172" width="184" height="42" rx="10" fill="#1D4ED8"/>
+                <text x="110" y="198" text-anchor="middle" font-size="12" font-weight="600" fill="#fff" font-family="Inter,sans-serif">Submit report</text>
+                <!-- Small secondary link -->
+                <text x="110" y="232" text-anchor="middle" font-size="9" fill="#9CA3AF" font-family="Inter,sans-serif">Cancel</text>
+              </svg>
+              <div class="mockup-item-label">Facebook CS reporting flow</div>
+              <div class="mockup-item-sublabel">Clear categories, single action</div>
+            </div>
+
+            <div class="mockup-item">
+              <!-- Complex bottom sheet (NetzDG regulatory form) -->
+              <svg viewBox="0 0 220 260" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:220px;display:block;margin:0 auto" aria-label="Complex NetzDG regulatory form: dense, technical, with multiple small options and buttons">
+                <!-- Sheet background -->
+                <rect x="4" y="4" width="212" height="252" rx="16" fill="#fff" stroke="#E5E7EB" stroke-width="1.5"/>
+                <!-- Handle bar -->
+                <rect x="87" y="16" width="46" height="5" rx="2.5" fill="#D1D5DB"/>
+                <!-- Title (smaller, denser) -->
+                <text x="110" y="42" text-anchor="middle" font-size="10.5" font-weight="600" fill="#111827" font-family="Inter,sans-serif">NetzDG-Meldung einreichen</text>
+                <text x="110" y="56" text-anchor="middle" font-size="8" fill="#9CA3AF" font-family="Inter,sans-serif">Bitte wählen Sie den Grund Ihrer Meldung</text>
+                <!-- Dense list of small text options -->
+                <rect x="18" y="66" width="14" height="14" rx="3" fill="#F4F4F5" stroke="#D1D5DB" stroke-width="1"/>
+                <rect x="38" y="69" width="108" height="7" rx="3" fill="#D1D5DB"/>
+                <rect x="18" y="86" width="14" height="14" rx="3" fill="#F4F4F5" stroke="#D1D5DB" stroke-width="1"/>
+                <rect x="38" y="89" width="130" height="7" rx="3" fill="#D1D5DB"/>
+                <rect x="18" y="106" width="14" height="14" rx="3" fill="#F4F4F5" stroke="#D1D5DB" stroke-width="1"/>
+                <rect x="38" y="109" width="95" height="7" rx="3" fill="#D1D5DB"/>
+                <rect x="18" y="126" width="14" height="14" rx="3" fill="#F4F4F5" stroke="#D1D5DB" stroke-width="1"/>
+                <rect x="38" y="129" width="120" height="7" rx="3" fill="#D1D5DB"/>
+                <rect x="18" y="146" width="14" height="14" rx="3" fill="#F4F4F5" stroke="#D1D5DB" stroke-width="1"/>
+                <rect x="38" y="149" width="85" height="7" rx="3" fill="#D1D5DB"/>
+                <rect x="18" y="166" width="14" height="14" rx="3" fill="#F4F4F5" stroke="#D1D5DB" stroke-width="1"/>
+                <rect x="38" y="169" width="140" height="7" rx="3" fill="#D1D5DB"/>
+                <!-- Small dense footnote text -->
+                <rect x="18" y="188" width="160" height="5" rx="2" fill="#EBEBED"/>
+                <rect x="18" y="197" width="140" height="5" rx="2" fill="#EBEBED"/>
+                <!-- Separator -->
+                <line x1="18" y1="210" x2="202" y2="210" stroke="#E5E7EB" stroke-width="1"/>
+                <!-- Three small buttons at bottom -->
+                <rect x="18" y="220" width="50" height="26" rx="6" fill="#F4F4F5" stroke="#E5E7EB" stroke-width="1"/>
+                <text x="43" y="237" text-anchor="middle" font-size="8.5" fill="#6B7280" font-weight="500" font-family="Inter,sans-serif">Zurück</text>
+                <rect x="76" y="220" width="70" height="26" rx="6" fill="#F4F4F5" stroke="#E5E7EB" stroke-width="1"/>
+                <text x="111" y="237" text-anchor="middle" font-size="8" fill="#6B7280" font-weight="500" font-family="Inter,sans-serif">Andere Option</text>
+                <rect x="154" y="220" width="50" height="26" rx="6" fill="#1D4ED8"/>
+                <text x="179" y="237" text-anchor="middle" font-size="8.5" fill="#fff" font-weight="600" font-family="Inter,sans-serif">Weiter</text>
+              </svg>
+              <div class="mockup-item-label">NetzDG regulatory form</div>
+              <div class="mockup-item-sublabel">Dense, technical, "very German"</div>
+            </div>
+          </div>
+          <div class="mockup-caption">Users found the regulatory form long, technical, and difficult to categorise their experience within</div>
+        </div>
+
+        <ul class="findings-list">
+          <li>
+            <span class="find-icon">😟</span>
+            <span><strong>Uncertainty and reluctance:</strong> Participants could not say with certainty what NetzDG covers, and were uncomfortable deciding between NetzDG and CS reporting — they did not want to make what felt like a legal determination. Fear of repercussions (particularly that the poster might learn their identity) added to hesitancy.</span>
+          </li>
+          <li>
+            <span class="find-icon">⚖️</span>
+            <span><strong>Severity perception:</strong> Users tended to associate NetzDG with more severe offenses, driven by language indicating "legal" and "law." They guessed its scope was smaller and reserved for extreme content — which led them to underuse it for content that actually fell within its remit.</span>
+          </li>
+          <li>
+            <span class="find-icon">✅</span>
+            <span><strong>What helped:</strong> Information explaining NetzDG with specific examples, and clearly delineated reporting paths, helped users feel they were accurately and efficiently reporting. Reducing the burden of the decision was the core design challenge.</span>
+          </li>
+        </ul>
+
+        <!-- ACCORDION: Concept comparison detail -->
+        <div class="accordion">
+          <button class="accordion-trigger" aria-expanded="false">
+            <div class="accordion-text">
+              <div class="accordion-label">Concept-by-concept findings</div>
+              <div class="accordion-sublabel">How the five reporting flow designs performed in usability testing</div>
+            </div>
+            <div class="accordion-icon">+</div>
+          </button>
+          <div class="accordion-body">
+            <div class="accordion-body-inner">
+              <table class="detail-table">
+                <thead>
+                  <tr><th>Concept</th><th>Performance &amp; User Response</th></tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Opt-In</td>
+                    <td><strong>Preferred by users who wanted to reduce decision burden.</strong> The soft phrasing "I'm of the opinion" gave users confidence to select the NetzDG option without feeling they were making a firm legal declaration. Lowered anxiety around commitment and repercussion.</td>
+                  </tr>
+                  <tr>
+                    <td>Subtext</td>
+                    <td><strong>Also preferred by users seeking lower decisional burden.</strong> Contextual explanatory text beneath each option helped users feel informed without having to navigate away, but only worked well when the explanation was concise and jargon-free.</td>
+                  </tr>
+                  <tr>
+                    <td>Chevron Split</td>
+                    <td><strong>Preferred by more confident reporters wanting a clear distinction.</strong> The visual divergence of paths made NetzDG vs. CS reporting feel genuinely different — but users who became uncertain later in the flow struggled to find a route back to Community Standards reporting.</td>
+                  </tr>
+                  <tr>
+                    <td>Q&amp;A</td>
+                    <td><strong>Also preferred by confident users, but shared the same loop-back problem.</strong> The guided decision-tree logic worked well for users who were certain of the content category, but penalised users who changed their mind partway through.</td>
+                  </tr>
+                  <tr>
+                    <td>Current / Recommended Actions</td>
+                    <td><strong>Control condition — baseline experience.</strong> Users struggled most with this design because no additional context was provided to guide their choice, leaving uncertainty unresolved.</td>
+                  </tr>
+                </tbody>
+              </table>
+              <div class="analysis-note" style="margin-top:16px">
+                <p><strong>Design implication:</strong> The clearest recommendation from the study was to favour concepts that reduced decisional burden (Opt-In, Subtext) over those that created sharper divergence (Chevron Split, Q&amp;A). Users found it difficult to make confident legal determinations, and designs that acknowledged this uncertainty — rather than demanding resolution — consistently performed better.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-divider"></div>
+
+      <!-- THE PROBLEM -->
+      <div class="case-section">
+        <div class="section-eyebrow">The Problem</div>
+        <h3>When Implementation Went Wrong</h3>
+        <p>The research findings were clear on what users needed. But when the NetzDG reporting flow was eventually implemented — under strict regulatory requirements in the law's wording — the result was a significant decline in key metrics.</p>
+
+        <!-- IMAGE 2: Line chart showing drop -->
+        <div class="chart-wrap">
+          <div class="chart-title">High-severity content reports over time</div>
+          <svg viewBox="0 0 520 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:520px;display:block" aria-label="Line chart showing high-severity reports dropping 13% at the point of NetzDG implementation and remaining at lower level">
+            <!-- Grid lines -->
+            <line x1="60" y1="20"  x2="60"  y2="158" stroke="#E5E7EB" stroke-width="1"/>
+            <line x1="60" y1="158" x2="505" y2="158" stroke="#E5E7EB" stroke-width="1"/>
+            <line x1="60" y1="20"  x2="505" y2="20"  stroke="#E5E7EB" stroke-width="0.5" stroke-dasharray="3 3"/>
+            <line x1="60" y1="65"  x2="505" y2="65"  stroke="#E5E7EB" stroke-width="0.5" stroke-dasharray="3 3"/>
+            <line x1="60" y1="110" x2="505" y2="110" stroke="#E5E7EB" stroke-width="0.5" stroke-dasharray="3 3"/>
+            <!-- Y-axis labels -->
+            <text x="52" y="162" text-anchor="end" font-size="9" fill="#9CA3AF" font-family="Inter,sans-serif">Low</text>
+            <text x="52" y="114" text-anchor="end" font-size="9" fill="#9CA3AF" font-family="Inter,sans-serif">Mid</text>
+            <text x="52" y="69"  text-anchor="end" font-size="9" fill="#9CA3AF" font-family="Inter,sans-serif">High</text>
+            <text x="52" y="24"  text-anchor="end" font-size="9" fill="#9CA3AF" font-family="Inter,sans-serif">Peak</text>
+            <!-- Y-axis title -->
+            <text x="12" y="95" text-anchor="middle" font-size="9" fill="#9CA3AF" font-family="Inter,sans-serif" transform="rotate(-90,12,95)">No. of reports</text>
+            <!-- X-axis labels -->
+            <text x="80"  y="173" text-anchor="middle" font-size="8.5" fill="#9CA3AF" font-family="Inter,sans-serif">Jan 2020</text>
+            <text x="185" y="173" text-anchor="middle" font-size="8.5" fill="#9CA3AF" font-family="Inter,sans-serif">Jul 2020</text>
+            <text x="295" y="173" text-anchor="middle" font-size="8.5" fill="#9CA3AF" font-family="Inter,sans-serif">Jan 2021</text>
+            <text x="400" y="173" text-anchor="middle" font-size="8.5" fill="#9CA3AF" font-family="Inter,sans-serif">Jul 2021</text>
+            <text x="490" y="173" text-anchor="middle" font-size="8.5" fill="#9CA3AF" font-family="Inter,sans-serif">Dec 2021</text>
+
+            <!-- Implementation marker line -->
+            <line x1="280" y1="20" x2="280" y2="158" stroke="#F59E0B" stroke-width="1.5" stroke-dasharray="4 3"/>
+
+            <!-- Annotation box for event -->
+            <rect x="144" y="22" width="196" height="30" rx="5" fill="#FEF3C7"/>
+            <text x="242" y="36" text-anchor="middle" font-size="8.5" font-weight="600" fill="#92400E" font-family="Inter,sans-serif">⚠ Implementation of</text>
+            <text x="242" y="48" text-anchor="middle" font-size="8.5" font-weight="600" fill="#92400E" font-family="Inter,sans-serif">NetzDG reporting flow</text>
+
+            <!-- The main data line: flat, then drops sharply, then flat at lower rate -->
+            <!-- Flat segment: Jan 2020 (x=80) to event (x=280), y=55 (high level) -->
+            <!-- Drop: x=280 (y=55) to x=305 (y=118) — sharp drop -->
+            <!-- Flat at lower: x=305 to x=490 (y=118) -->
+            <polyline
+              points="80,55 280,55 305,118 490,118"
+              fill="none" stroke="#1D4ED8" stroke-width="2.5"
+              stroke-linejoin="round" stroke-linecap="round"/>
+            <!-- Area fill under curve -->
+            <polygon points="80,55 280,55 305,118 490,118 490,158 80,158"
+              fill="#EFF6FF" opacity="0.45"/>
+
+            <!-- Data points -->
+            <circle cx="80"  cy="55"  r="4.5" fill="#fff" stroke="#1D4ED8" stroke-width="2"/>
+            <circle cx="280" cy="55"  r="4.5" fill="#F59E0B" stroke="#fff" stroke-width="1.5"/>
+            <circle cx="305" cy="118" r="4.5" fill="#1D4ED8"/>
+            <circle cx="490" cy="118" r="4.5" fill="#fff" stroke="#1D4ED8" stroke-width="2"/>
+
+            <!-- Drop annotation arrow and label -->
+            <line x1="320" y1="86" x2="305" y2="108" stroke="#EF4444" stroke-width="1.5" marker-end="url(#arr)"/>
+            <defs>
+              <marker id="arr" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto">
+                <path d="M0,0 L6,3 L0,6 Z" fill="#EF4444"/>
+              </marker>
+            </defs>
+            <rect x="316" y="68" width="62" height="18" rx="4" fill="#FEE2E2"/>
+            <text x="347" y="81" text-anchor="middle" font-size="9" font-weight="700" fill="#EF4444" font-family="Inter,sans-serif">−13% reports</text>
+          </svg>
+        </div>
+
+        <div class="warning-box">
+          <p><strong>High-severity content reporting dropped 13%.</strong> This was precisely the kind of content the NetzDG law had been introduced to combat — and the implementation was making it harder, not easier, for users to report it. Strict requirements in the law's wording (for example, requiring the NetzDG form entrypoint to be no more than one click away in the user journey) made it structurally difficult for the product team to implement fixes unilaterally.</p>
+        </div>
+
+        <p>The research findings provided a clear explanation for why this was happening: user confusion around multiple entry points, the technical legal language in the regulatory form, and concern about lack of confidentiality were all deterring reporters from completing the NetzDG flow — particularly for the most severe content categories.</p>
+      </div>
+
+      <div class="section-divider"></div>
+
+      <!-- RESEARCH IN ACTION -->
+      <div class="case-section">
+        <div class="section-eyebrow">Research in Action</div>
+        <h3>Taking the Evidence to the Regulator</h3>
+        <p>With the product team's hands tied by the regulatory requirements, I repurposed the original research and combined it with the post-implementation data to build a case for the German regulator directly. The goal was to demonstrate that the current mandated approach was producing the opposite of the intended effect — and that a research-driven alternative would better serve the law's intent.</p>
+
+        <p>The case presented to the regulator focused on four areas:</p>
+
+        <ul class="findings-list">
+          <li>
+            <span class="find-icon">📉</span>
+            <span><strong>Causal evidence of the drop:</strong> Data clearly demonstrating the causal relationship between the mandated reporting flow and the 13% decline in high-severity content reports — the content NetzDG was specifically designed to address.</span>
+          </li>
+          <li>
+            <span class="find-icon">🔀</span>
+            <span><strong>User confusion around multiple entry points:</strong> Research findings showing that the requirement for a prominent, separate NetzDG entry point was creating confusion for users — who, faced with two options, either chose the wrong one or abandoned the report entirely.</span>
+          </li>
+          <li>
+            <span class="find-icon">🔒</span>
+            <span><strong>Confidentiality concerns:</strong> Evidence that the official NetzDG form's requirement for personal data was deterring reporters — particularly those with concerns about the content creator identifying them. This was having the most severe chilling effect on reports of the most serious content.</span>
+          </li>
+          <li>
+            <span class="find-icon">🧪</span>
+            <span><strong>A/B-tested recommendation:</strong> A proposal, supported by A/B testing, to simplify the NetzDG entry and implement it in-situ within the existing Facebook reporting flow — rather than as a separate, additional entry point — while retaining full legal compliance.</span>
+          </li>
+        </ul>
+
+        <!-- IMAGE 3: Single simplified bottom sheet (recommended solution) -->
+        <div class="mockup-wrap" style="margin-top:28px">
+          <div class="chart-title">The recommended solution: a unified, user-centred reporting flow</div>
+          <div style="display:flex;justify-content:center;padding:8px 0 4px">
+            <div style="max-width:240px;width:100%">
+              <svg viewBox="0 0 220 275" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;margin:0 auto" aria-label="Recommended simplified bottom sheet with category tags and two clear CTA buttons for NetzDG and Community Standards paths">
+                <!-- Sheet background -->
+                <rect x="4" y="4" width="212" height="267" rx="16" fill="#fff" stroke="#E5E7EB" stroke-width="1.5"/>
+                <!-- Handle bar -->
+                <rect x="87" y="16" width="46" height="5" rx="2.5" fill="#D1D5DB"/>
+                <!-- Title -->
+                <text x="110" y="48" text-anchor="middle" font-size="13" font-weight="600" fill="#111827" font-family="Inter,sans-serif">Report this content</text>
+                <!-- Soft language text -->
+                <text x="110" y="66" text-anchor="middle" font-size="8.5" fill="#6B7280" font-family="Inter,sans-serif">I'm of the opinion this content is:</text>
+                <!-- Category pills -->
+                <rect x="18" y="78" width="84" height="26" rx="13" fill="#EFF6FF" stroke="#BFDBFE" stroke-width="1.5"/>
+                <text x="60" y="95" text-anchor="middle" font-size="9.5" fill="#1D4ED8" font-weight="500" font-family="Inter,sans-serif">Hate speech</text>
+                <rect x="112" y="78" width="68" height="26" rx="13" fill="#EFF6FF" stroke="#BFDBFE" stroke-width="1.5"/>
+                <text x="146" y="95" text-anchor="middle" font-size="9.5" fill="#1D4ED8" font-weight="500" font-family="Inter,sans-serif">Violence</text>
+                <rect x="18" y="114" width="94" height="26" rx="13" fill="#EFF6FF" stroke="#BFDBFE" stroke-width="1.5"/>
+                <text x="65" y="131" text-anchor="middle" font-size="9.5" fill="#1D4ED8" font-weight="500" font-family="Inter,sans-serif">Harassment</text>
+                <rect x="122" y="114" width="80" height="26" rx="13" fill="#F4F4F5" stroke="#E5E7EB" stroke-width="1.5"/>
+                <text x="162" y="131" text-anchor="middle" font-size="9.5" fill="#6B7280" font-weight="500" font-family="Inter,sans-serif">Something else</text>
+
+                <!-- Separator -->
+                <line x1="18" y1="158" x2="202" y2="158" stroke="#E5E7EB" stroke-width="1"/>
+
+                <!-- Two CTA buttons at the bottom -->
+                <!-- Button 1: NetzDG path (outline style) -->
+                <rect x="18" y="170" width="184" height="40" rx="10" fill="#EFF6FF" stroke="#BFDBFE" stroke-width="1.5"/>
+                <text x="110" y="186" text-anchor="middle" font-size="10" font-weight="600" fill="#1D4ED8" font-family="Inter,sans-serif">Report under NetzDG</text>
+                <text x="110" y="202" text-anchor="middle" font-size="8" fill="#6B7280" font-family="Inter,sans-serif">German law violation</text>
+                <!-- Button 2: Facebook CS path (solid) -->
+                <rect x="18" y="218" width="184" height="40" rx="10" fill="#1D4ED8"/>
+                <text x="110" y="234" text-anchor="middle" font-size="10" font-weight="600" fill="#fff" font-family="Inter,sans-serif">Report to Facebook</text>
+                <text x="110" y="250" text-anchor="middle" font-size="8" fill="#BFDBFE" font-family="Inter,sans-serif">Community Standards violation</text>
+              </svg>
+              <div class="mockup-item-label" style="text-align:center;margin-top:12px">Approved implementation</div>
+              <div class="mockup-item-sublabel" style="text-align:center;margin-top:2px">Soft language, two clear paths, in-situ with existing flow</div>
+            </div>
+          </div>
+          <div class="mockup-caption">The recommended flow used the "Opt-In" concept's soft language — "I'm of the opinion" — reducing user anxiety about making a legal determination</div>
+        </div>
+
+        <!-- ACCORDION: Regulatory presentation detail -->
+        <div class="accordion">
+          <button class="accordion-trigger" aria-expanded="false">
+            <div class="accordion-text">
+              <div class="accordion-label">How the regulatory case was constructed</div>
+              <div class="accordion-sublabel">Framing the argument, combining qual research with post-implementation data</div>
+            </div>
+            <div class="accordion-icon">+</div>
+          </button>
+          <div class="accordion-body">
+            <div class="accordion-body-inner">
+              <p>The initial research had been conducted to inform design — not to argue with a regulator. Repurposing it required reframing the findings around the regulator's own goals, not just Facebook's product goals. The central argument was that the current implementation was actively undermining the law's intent: fewer high-severity reports meant less enforcement, not more.</p>
+              <p style="margin-top:12px"><strong>Combining qualitative and quantitative evidence:</strong> The qualitative research from the Berlin study provided the "why" — the specific user behaviours and mental models that explained the drop. The post-implementation data provided the "how much." Neither was sufficient alone: the data showed there was a problem, but the research explained what to do about it.</p>
+              <p style="margin-top:12px"><strong>A/B testing the recommendation:</strong> Before approaching the regulator, A/B testing was run to demonstrate that the proposed in-situ approach (integrating NetzDG into the existing reporting flow rather than requiring a separate entry point) would restore reporting rates. Having experimental evidence — not just research findings — was important for a regulatory audience who might otherwise treat user research as subjective.</p>
+              <p style="margin-top:12px"><strong>Addressing the one-click requirement:</strong> The regulatory requirement for NetzDG reporting to be accessible within one click was a key constraint. The recommendation did require more than one click to reach the NetzDG path — but the argument was that a path that users could actually find and complete was preferable to one that was technically compliant but deterred reporters. This required the regulator to accept a trade-off between formal compliance and effective compliance.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-divider"></div>
+
+      <!-- IMPACT -->
+      <div class="case-section">
+        <div class="section-eyebrow">Impact</div>
+        <h3>Regulator-Approved — and it Worked</h3>
+        <p>The German regulator supported the proposed approach. The simplified, in-situ implementation was approved and shipped — and the results were clear.</p>
+
+        <div class="stat-row">
+          <div class="stat-box">
+            <div class="stat-number">13%</div>
+            <div class="stat-label">Drop in high-severity reports — fully mitigated by the research-driven approach</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-number">0%</div>
+            <div class="stat-label">Net change in reporting rates after the regulator-approved implementation</div>
+          </div>
+        </div>
+
+        <div class="highlight-box">
+          <p>The approach worked because it was grounded in how users actually think and behave — not how the law assumed they would. The research-driven design aligned with user mental models, reducing confusion and dropoff. Complete mitigation of the 13% decline was the result.</p>
+        </div>
+
+        <div class="outcome-grid">
+          <div class="outcome-box">
+            <div class="outcome-title">Shipped</div>
+            <p>Simplified, in-situ NetzDG reporting path integrated into the existing Facebook reporting flow. Opt-In soft language ("I'm of the opinion") applied to reduce decisional anxiety. Two clearly delineated CTA buttons preserving both reporting paths.</p>
+          </div>
+          <div class="outcome-box">
+            <div class="outcome-title">Broader Significance</div>
+            <p>This was an unusual research outcome: findings were used not just to inform a product decision, but to influence a government regulator. It established that user research could be a credible input into regulatory dialogue — not just internal product planning.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-divider"></div>
+
+      <!-- MY ROLE -->
+      <div class="case-section">
+        <div class="section-eyebrow">My Role</div>
+        <h3>Responsibilities</h3>
+        <div class="role-list">
+          <div class="role-item"><div class="role-dot"></div><span>Scoped and managed the qualitative research programme — including the MindSpark vendor relationship, study design, and ensuring the research questions were tightly linked to the product decisions ahead</span></div>
+          <div class="role-item"><div class="role-dot"></div><span>Synthesised findings from 12 IDIs, two focus groups, a card sort, five usability tests, and a co-creation exercise into actionable design recommendations</span></div>
+          <div class="role-item"><div class="role-dot"></div><span>Identified the 13% drop in high-severity reporting post-implementation and connected it causally to the user behaviour patterns the research had predicted</span></div>
+          <div class="role-item"><div class="role-dot"></div><span>Repurposed and reframed the research findings for a regulatory audience — constructing a coherent argument that the mandated implementation was producing outcomes contrary to the law's intent</span></div>
+          <div class="role-item"><div class="role-dot"></div><span>Partnered with the product team on A/B testing the alternative approach before presenting it to the regulator, ensuring the recommendation was experimentally grounded</span></div>
+          <div class="role-item"><div class="role-dot"></div><span>Presented the case to the German regulator and secured approval for the revised approach</span></div>
+        </div>
+
+        <!-- ACCORDION: Cross-functional context -->
+        <div class="accordion" style="margin-top:20px">
+          <button class="accordion-trigger" aria-expanded="false">
+            <div class="accordion-text">
+              <div class="accordion-label">Working across product, policy, and legal teams</div>
+              <div class="accordion-sublabel">How the cross-functional dynamics shaped the work</div>
+            </div>
+            <div class="accordion-icon">+</div>
+          </button>
+          <div class="accordion-body">
+            <div class="accordion-body-inner">
+              <p><strong>Product team constraints:</strong> The product team's hands were tied once the NetzDG flow was live — the regulatory requirements left little room for unilateral fixes. This is why the decision was made to go to the regulator directly rather than attempting to engineer around the problem. The product team were supportive of this approach but needed the research to make it credible.</p>
+              <p style="margin-top:12px"><strong>Policy and legal involvement:</strong> Presenting to a government regulator required close coordination with Facebook's policy and legal teams. The framing had to be precise: the argument wasn't that the law was wrong, but that the specific implementation approach was failing to achieve the law's stated goals. This distinction was important for maintaining a productive regulatory relationship.</p>
+              <p style="margin-top:12px"><strong>Research as regulatory evidence:</strong> User research is rarely used as primary evidence in regulatory contexts — it's more commonly presented as supporting colour. In this case, the research was the central argument: the qualitative findings explained the mechanism, and the data showed the effect. Ensuring the research methodology was defensible to a non-research audience (including lawyers and policy officials) required extra rigour in how the work was documented and presented.</p>
+              <p style="margin-top:12px"><strong>A/B testing as the bridge:</strong> The decision to run A/B tests before approaching the regulator was critical. Without experimental evidence that the alternative approach would restore reporting rates, the recommendation could have been dismissed as theoretical. The A/B results transformed the research from "here's what users say" to "here's evidence it will work" — a meaningful shift for a regulatory audience.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /content-card -->
+  </main>
+
+  <script>
+    document.querySelectorAll('.accordion-trigger').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const expanded = btn.getAttribute('aria-expanded') === 'true';
+        btn.setAttribute('aria-expanded', String(!expanded));
+        const body = btn.nextElementSibling;
+        body.style.maxHeight = !expanded ? body.scrollHeight + 'px' : '0';
+      });
+    });
+
+    // ── Mobile hamburger ──────────────────────────────
+    (function () {
+      const btn      = document.querySelector('.hamburger');
+      const sidebar  = document.getElementById('sidebar');
+      const backdrop = document.querySelector('.nav-backdrop');
+      if (!btn) return;
+
+      function setOpen(open) {
+        btn.setAttribute('aria-expanded', open);
+        btn.classList.toggle('open', open);
+        sidebar.classList.toggle('open', open);
+        backdrop.classList.toggle('visible', open);
+        document.body.style.overflow = open ? 'hidden' : '';
+      }
+
+      btn.addEventListener('click', () => setOpen(!sidebar.classList.contains('open')));
+      backdrop.addEventListener('click', () => setOpen(false));
+
+      sidebar.querySelectorAll('a').forEach(a =>
+        a.addEventListener('click', () => { if (window.innerWidth <= 768) setOpen(false); })
+      );
+    })();
+  </script>
+
+</body>
+</html>
