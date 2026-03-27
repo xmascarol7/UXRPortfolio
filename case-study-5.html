@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Developer Funnel Awareness — Bryan Carroll</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=DM+Serif+Display&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:           #FAFAFA;
+      --bg-2:         #F4F4F5;
+      --bg-3:         #EBEBED;
+      --text-1:       #111827;
+      --text-2:       #4B5563;
+      --text-3:       #9CA3AF;
+      --accent:       #1D4ED8;
+      --accent-light: #EFF6FF;
+      --accent-mid:   #BFDBFE;
+      --border:       #E5E7EB;
+      --nav-w:        260px;
+      --serif:        'DM Serif Display', Georgia, serif;
+      --sans:         'Inter', system-ui, sans-serif;
+      --radius:       12px;
+      --transition:   0.2s ease;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--sans);
+      background: var(--bg);
+      color: var(--text-1);
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* ── SIDEBAR ─────────────────────────────────── */
+    nav#sidebar {
+      position: fixed; top: 0; left: 0;
+      width: var(--nav-w); height: 100vh;
+      background: #fff; border-right: 1px solid var(--border);
+      display: flex; flex-direction: column;
+      padding: 48px 32px; z-index: 100; gap: 0;
+    }
+    .nav-identity { margin-bottom: 48px; }
+    .nav-identity .role {
+      font-size: 0.75rem; font-weight: 500; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--text-3); margin-top: 6px;
+    }
+    .nav-section-label {
+      font-size: 0.65rem; font-weight: 600; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--text-3); margin-bottom: 12px;
+    }
+    .nav-links { list-style: none; margin-bottom: 36px; }
+    .nav-links li + li { margin-top: 2px; }
+    .nav-links a {
+      display: block; font-size: 0.875rem; font-weight: 400;
+      color: var(--text-2); text-decoration: none;
+      padding: 7px 12px; border-radius: 8px;
+      transition: background var(--transition), color var(--transition);
+    }
+    .nav-links a:hover, .nav-links a.active { background: var(--accent-light); color: var(--accent); }
+    .nav-links a.active { font-weight: 500; }
+    .nav-divider { height: 1px; background: var(--border); margin-bottom: 36px; }
+    .nav-footer { margin-top: auto; display: flex; flex-direction: column; gap: 12px; }
+    .nav-footer a { font-size: 0.8rem; color: var(--text-3); text-decoration: none; transition: color var(--transition); }
+    .nav-footer a:hover { color: var(--accent); }
+
+    /* ── MAIN ────────────────────────────────────── */
+    main { margin-left: var(--nav-w); flex: 1; max-width: 900px; padding: 80px 64px 120px; }
+
+    /* ── TYPOGRAPHY ──────────────────────────────── */
+    h2 { font-family: var(--serif); font-size: clamp(1.75rem, 3vw, 2.25rem); line-height: 1.2; color: var(--text-1); margin-bottom: 20px; }
+    h3 { font-size: 1rem; font-weight: 600; color: var(--text-1); margin-bottom: 10px; }
+    p { font-size: 0.9375rem; line-height: 1.75; color: var(--text-2); }
+    p + p { margin-top: 14px; }
+    strong { color: var(--text-1); font-weight: 600; }
+
+    /* ── BACK LINK ───────────────────────────────── */
+    .back-link {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 0.8rem; color: var(--text-3); text-decoration: none;
+      margin-bottom: 32px; transition: color var(--transition);
+    }
+    .back-link:hover { color: var(--accent); }
+
+    /* ── CASE HERO ───────────────────────────────── */
+    .case-hero {
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 48px 56px;
+      display: grid; grid-template-columns: 1fr 220px;
+      gap: 40px; align-items: center;
+      margin-bottom: 0;
+    }
+    .company-tag {
+      display: inline-block; font-size: 0.65rem; font-weight: 700;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--accent); background: var(--accent-light);
+      padding: 4px 10px; border-radius: 999px; margin-bottom: 16px;
+    }
+    .method-pills { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+    .method-pill {
+      font-size: 0.75rem; font-weight: 500;
+      padding: 5px 12px; border-radius: 999px;
+      border: 1px solid var(--border); color: var(--text-2);
+    }
+
+    /* ── CONTENT CARD ────────────────────────────── */
+    .content-card {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-top: none;
+      border-radius: 0 0 var(--radius) var(--radius);
+      padding: 56px;
+    }
+
+    /* ── SECTION SPACING ─────────────────────────── */
+    .case-section { margin-bottom: 48px; }
+    .case-section:last-child { margin-bottom: 0; }
+    .section-divider { height: 1px; background: var(--border); margin: 48px 0; }
+
+    .section-eyebrow {
+      font-size: 0.65rem; font-weight: 700; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--accent); margin-bottom: 10px;
+    }
+
+    /* ── HIGHLIGHT BOX ───────────────────────────── */
+    .highlight-box {
+      background: var(--accent-light);
+      border-left: 3px solid var(--accent);
+      border-radius: 0 8px 8px 0;
+      padding: 16px 20px; margin: 20px 0;
+    }
+    .highlight-box p { color: var(--text-1); font-size: 0.875rem; }
+
+    /* ── STAT ROW ────────────────────────────────── */
+    .stat-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 16px; margin: 24px 0; }
+    .stat-box { background: var(--bg-2); border-radius: 10px; padding: 20px; text-align: center; }
+    .stat-box.accent { background: var(--accent); }
+    .stat-box.accent .stat-number { color: #fff; }
+    .stat-box.accent .stat-label { color: rgba(255,255,255,0.75); }
+    .stat-number { font-family: var(--serif); font-size: 2rem; color: var(--text-1); line-height: 1; margin-bottom: 6px; }
+    .stat-label { font-size: 0.75rem; color: var(--text-3); font-weight: 500; line-height: 1.3; }
+
+    /* ── PHASE GRID ──────────────────────────────── */
+    .phase-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 20px 0; }
+    .phase-box { background: var(--bg-2); border-radius: 10px; padding: 20px 24px; }
+    .phase-label { font-size: 0.65rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 8px; }
+    .phase-box p { font-size: 0.85rem; }
+
+    /* ── FINDINGS LIST ───────────────────────────── */
+    .findings-list { list-style: none; margin: 16px 0; }
+    .findings-list li {
+      padding: 14px 0; border-bottom: 1px solid var(--border);
+      display: flex; gap: 14px; align-items: flex-start;
+      font-size: 0.9rem; color: var(--text-2); line-height: 1.6;
+    }
+    .findings-list li:last-child { border-bottom: none; }
+    .find-icon { font-size: 1rem; flex-shrink: 0; margin-top: 1px; }
+
+    /* ── ACCORDION ───────────────────────────────── */
+    .accordion { margin: 20px 0; border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
+    .accordion-trigger {
+      width: 100%; background: none; border: none; cursor: pointer;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 18px 20px; text-align: left;
+      transition: background var(--transition);
+    }
+    .accordion-trigger:hover { background: var(--bg-2); }
+    .accordion-text { flex: 1; }
+    .accordion-label { font-size: 0.875rem; font-weight: 500; color: var(--text-1); }
+    .accordion-sublabel { font-size: 0.775rem; color: var(--text-3); margin-top: 2px; }
+    .accordion-icon {
+      width: 24px; height: 24px; border-radius: 50%;
+      background: var(--bg-2); border: 1px solid var(--border);
+      color: var(--text-2); font-size: 1rem; line-height: 24px; text-align: center;
+      flex-shrink: 0; margin-left: 16px;
+      transition: transform 0.25s ease, background var(--transition), border-color var(--transition), color var(--transition);
+    }
+    .accordion-trigger[aria-expanded="true"] .accordion-icon {
+      transform: rotate(45deg);
+      background: var(--accent-light); border-color: var(--accent); color: var(--accent);
+    }
+    .accordion-body { max-height: 0; overflow: hidden; transition: max-height 0.35s ease; }
+    .accordion-body-inner { padding: 24px 20px; border-top: 1px solid var(--border); }
+    .accordion-body-inner p { font-size: 0.875rem; }
+    .accordion-body-inner p + p { margin-top: 12px; }
+
+    /* ── DETAIL TABLE ────────────────────────────── */
+    .detail-table { width: 100%; border-collapse: collapse; font-size: 0.825rem; margin-top: 12px; }
+    .detail-table th { text-align: left; font-size: 0.65rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-3); padding: 8px 12px; border-bottom: 1px solid var(--border); }
+    .detail-table td { padding: 10px 12px; border-bottom: 1px solid var(--border); color: var(--text-2); vertical-align: top; line-height: 1.5; }
+    .detail-table tr:last-child td { border-bottom: none; }
+    .detail-table td:first-child { font-weight: 500; color: var(--text-1); white-space: nowrap; }
+
+    /* ── ANALYSIS NOTE ───────────────────────────── */
+    .analysis-note { background: var(--bg-2); border-radius: 8px; padding: 14px 16px; margin-top: 14px; }
+    .analysis-note p { font-size: 0.825rem; }
+
+    /* ── CHART: FUNNEL ───────────────────────────── */
+    .chart-wrap { margin: 24px 0; }
+    .chart-title { font-size: 0.75rem; font-weight: 600; color: var(--text-2); margin-bottom: 16px; letter-spacing: 0.04em; text-transform: uppercase; }
+
+    /* ── FUNNEL BARS ─────────────────────────────── */
+    .funnel-chart { display: flex; flex-direction: column; gap: 10px; }
+    .funnel-row { display: grid; grid-template-columns: 160px 1fr 60px; align-items: center; gap: 12px; }
+    .funnel-label { font-size: 0.775rem; color: var(--text-2); text-align: right; }
+    .funnel-track { height: 32px; background: var(--bg-2); border-radius: 4px; position: relative; overflow: visible; }
+    .funnel-fill {
+      position: absolute; top: 0; left: 0; height: 100%; border-radius: 4px;
+      display: flex; align-items: center; padding-left: 10px;
+      font-size: 0.7rem; font-weight: 600; color: #fff;
+    }
+    .funnel-fill.level-1 { background: #1D4ED8; }
+    .funnel-fill.level-2 { background: #3B6FE8; }
+    .funnel-fill.level-3 { background: #5B8BEE; }
+    .funnel-fill.level-4 { background: #BFDBFE; color: var(--text-2); padding-left: 0; left: calc(var(--w) + 6px); }
+    .funnel-pct { font-size: 0.8rem; font-weight: 600; color: var(--text-1); }
+    .funnel-note { font-size: 0.75rem; color: var(--text-3); margin-top: 10px; font-style: italic; }
+
+    /* ── OR CHART ────────────────────────────────── */
+    .or-chart { display: flex; flex-direction: column; gap: 12px; margin: 20px 0; }
+    .or-row { display: grid; grid-template-columns: 200px 1fr 50px; align-items: center; gap: 12px; }
+    .or-label { font-size: 0.775rem; color: var(--text-2); text-align: right; line-height: 1.3; }
+    .or-track { height: 28px; background: var(--bg-2); border-radius: 4px; position: relative; overflow: hidden; }
+    .or-fill {
+      position: absolute; top: 0; left: 0; height: 100%; border-radius: 4px;
+      display: flex; align-items: center; padding-left: 10px;
+      font-size: 0.7rem; font-weight: 600; color: #fff;
+    }
+    .or-fill.strong { background: #1D4ED8; }
+    .or-fill.medium { background: #5B8BEE; }
+    .or-fill.light  { background: #BFDBFE; color: var(--text-2); }
+    .or-val { font-size: 0.8rem; font-weight: 600; color: var(--text-1); }
+    .or-section-label { font-size: 0.65rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-3); margin: 16px 0 6px; }
+
+    /* ── MESSAGING CONTRAST ──────────────────────── */
+    .contrast-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 20px 0; }
+    .contrast-box { background: var(--bg-2); border-radius: 10px; padding: 20px 24px; }
+    .contrast-box.emphasis { background: var(--accent-light); border: 1px solid var(--accent-mid); }
+    .contrast-label { font-size: 0.65rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-3); margin-bottom: 12px; }
+    .contrast-label.emphasis { color: var(--accent); }
+    .contrast-item { display: flex; align-items: center; gap: 8px; padding: 6px 0; font-size: 0.825rem; color: var(--text-2); border-bottom: 1px solid var(--border); }
+    .contrast-item:last-child { border-bottom: none; }
+    .contrast-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; background: var(--text-3); }
+    .contrast-dot.emphasis { background: var(--accent); }
+
+    /* ── REFLECTION BOX ──────────────────────────── */
+    .reflection-box { border: 1px solid var(--border); border-radius: 10px; padding: 28px 32px; }
+    .reflection-item { margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid var(--border); }
+    .reflection-item:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
+    .reflection-label { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-3); margin-bottom: 6px; }
+    .reflection-item p { font-size: 0.875rem; }
+
+    /* ══════════════════════════════════════════════════
+       HAMBURGER BUTTON
+    ══════════════════════════════════════════════════ */
+    .mobile-topbar {
+      display: none;
+      position: fixed; top: 0; left: 0; right: 0; z-index: 300;
+      height: 56px;
+      background: #fff; border-bottom: 1px solid var(--border);
+      align-items: center; gap: 12px;
+      padding: 0 16px;
+    }
+    .mobile-topbar-name { font-family: var(--serif); font-size: 1rem; color: var(--text-1); }
+
+    .hamburger {
+      display: flex;
+      flex-direction: column; justify-content: center; align-items: center; gap: 5px;
+      width: 36px; height: 36px; flex-shrink: 0;
+      background: var(--bg-2); border: 1px solid var(--border);
+      border-radius: 8px; cursor: pointer; padding: 0;
+    }
+    .hamburger span {
+      display: block; width: 18px; height: 2px;
+      background: var(--text-1); border-radius: 2px;
+      transition: transform 0.25s ease, opacity 0.2s ease;
+    }
+    .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+    .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    .nav-backdrop {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,0.25); z-index: 150;
+      opacity: 0; transition: opacity 0.3s ease; pointer-events: none;
+    }
+    .nav-backdrop.visible { opacity: 1; pointer-events: all; }
+
+    /* ══════════════════════════════════════════════════
+       RESPONSIVE
+    ══════════════════════════════════════════════════ */
+    @media (max-width: 768px) {
+      .mobile-topbar { display: flex; }
+      .nav-backdrop { display: block; }
+
+      nav#sidebar {
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+        z-index: 200;
+      }
+      nav#sidebar.open {
+        transform: translateX(0);
+        box-shadow: 4px 0 32px rgba(0,0,0,0.15);
+      }
+
+      main {
+        margin-left: 0 !important;
+        padding: 80px 20px 80px;
+        max-width: 100%;
+      }
+
+      h2 { font-size: clamp(1.4rem, 6vw, 2rem); }
+      p  { font-size: 0.9rem; }
+
+      .case-hero {
+        grid-template-columns: 1fr;
+        padding: 32px 28px;
+        gap: 0;
+      }
+      .case-hero > svg,
+      .case-hero > div:last-child { display: none; }
+
+      .content-card { padding: 32px 20px; }
+      .phase-grid { grid-template-columns: 1fr; }
+      .contrast-grid { grid-template-columns: 1fr; }
+      .or-row { grid-template-columns: 120px 1fr 40px; }
+      .or-label { font-size: 0.7rem; }
+      .funnel-row { grid-template-columns: 100px 1fr 50px; }
+      .funnel-label { font-size: 0.7rem; }
+      .stat-row { grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); }
+      .stat-number { font-size: 1.6rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Mobile top bar -->
+  <div class="mobile-topbar">
+    <button class="hamburger" aria-label="Open navigation" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+    <span class="mobile-topbar-name">Bryan Carroll</span>
+  </div>
+  <div class="nav-backdrop"></div>
+
+  <nav id="sidebar">
+    <div class="nav-identity">
+      <a href="index.html" style="font-family:var(--serif);font-size:1.25rem;color:var(--text-1);text-decoration:none;line-height:1.2;display:block;">Bryan Carroll</a>
+      <div class="role">User Research &amp; Insights</div>
+    </div>
+    <div class="nav-section-label">Work</div>
+    <ul class="nav-links">
+      <li><a href="case-study-1.html">Business Verification</a></li>
+      <li><a href="case-study-2.html">Integrity Measurement</a></li>
+      <li><a href="case-study-3.html">NetzDG Reporting</a></li>
+      <li><a href="case-study-4.html">Developer ROI</a></li>
+      <li><a href="case-study-5.html" class="active">Developer Funnel</a></li>
+    </ul>
+    <div class="nav-divider"></div>
+    <div class="nav-section-label">About</div>
+    <ul class="nav-links">
+      <li><a href="index.html#about">About me</a></li>
+      <li><a href="index.html#resume">Résumé</a></li>
+      <li><a href="index.html#contact">Contact</a></li>
+    </ul>
+    <div class="nav-footer">
+      <a href="mailto:bryan@carroll-parker.me">bryan@carroll-parker.me</a>
+    </div>
+  </nav>
+
+  <main>
+    <a class="back-link" href="index.html">← Back to work</a>
+
+    <!-- HERO -->
+    <div class="case-hero">
+      <div>
+        <span class="company-tag">Meta · Reality Labs · 2025</span>
+        <h2>Developer Funnel<br>Awareness &amp; Conversion</h2>
+        <p style="font-size:0.9rem;color:var(--text-2);line-height:1.65;max-width:440px">A large-scale quantitative study to understand how developers discover and evaluate Meta Horizon OS — mapping the full journey from awareness to intent to build, and identifying the highest-leverage interventions to grow the developer ecosystem.</p>
+        <div class="method-pills">
+          <span class="method-pill">Survey Design</span>
+          <span class="method-pill">Logistic Regression</span>
+          <span class="method-pill">Descriptive Statistics</span>
+          <span class="method-pill">Funnel Analysis</span>
+          <span class="method-pill">Segmentation</span>
+        </div>
+      </div>
+      <!-- Hero SVG: funnel diagram -->
+      <svg viewBox="0 0 200 190" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <!-- Funnel tier 1: All Developers -->
+        <rect x="20" y="15" width="160" height="32" rx="4" fill="#BFDBFE"/>
+        <text x="100" y="35" text-anchor="middle" font-size="8.5" fill="#1D4ED8" font-weight="600" font-family="Inter,sans-serif">All Developers</text>
+        <!-- Funnel connector 1 -->
+        <polygon points="20,47 180,47 165,62 35,62" fill="#BFDBFE" opacity="0.4"/>
+        <!-- Funnel tier 2: Aware -->
+        <rect x="35" y="62" width="130" height="32" rx="4" fill="#93C5FD"/>
+        <text x="100" y="82" text-anchor="middle" font-size="8.5" fill="#1D4ED8" font-weight="600" font-family="Inter,sans-serif">Aware — 42%</text>
+        <!-- Funnel connector 2 -->
+        <polygon points="35,94 165,94 148,109 52,109" fill="#93C5FD" opacity="0.4"/>
+        <!-- Funnel tier 3: Considering -->
+        <rect x="52" y="109" width="96" height="32" rx="4" fill="#60A5FA"/>
+        <text x="100" y="129" text-anchor="middle" font-size="8.5" fill="#fff" font-weight="600" font-family="Inter,sans-serif">Considering — 25%</text>
+        <!-- Funnel connector 3 -->
+        <polygon points="52,141 148,141 134,156 66,156" fill="#60A5FA" opacity="0.4"/>
+        <!-- Funnel tier 4: Intending -->
+        <rect x="66" y="156" width="68" height="28" rx="4" fill="#1D4ED8"/>
+        <text x="100" y="174" text-anchor="middle" font-size="8" fill="#fff" font-weight="600" font-family="Inter,sans-serif">Intent — ~8%</text>
+      </svg>
+    </div>
+
+    <div class="content-card">
+
+      <!-- CONTEXT -->
+      <div class="case-section">
+        <div class="section-eyebrow">Context</div>
+        <h3>A Platform with an Awareness Problem</h3>
+        <p>Meta Horizon OS was positioning itself as the leading XR development platform but the developer growth strategy was operating without a clear picture of the top-of-funnel dynamics. How many developers had even heard of the platform? How did they hear about it? What did they think when they did encounter it? And what was actually driving developers from passive awareness into active consideration and, ultimately, committed development?</p>
+        <p>The platform's ambition required a larger developer base. But growing that base effectively meant understanding the biggest opportunities for driving growth.</p>
+
+        <div class="stat-row">
+          <div class="stat-box">
+            <div class="stat-number">1,441</div>
+            <div class="stat-label">Developers surveyed</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-number">5</div>
+            <div class="stat-label">Countries included<br>in fieldwork</div>
+          </div>
+        </div>
+
+        <div class="highlight-box">
+          <p>Without a quantitative baseline of awareness, consideration, and intent, the team had no way to evaluate whether existing outreach was working, which developer segments were most actionable, or what the highest-leverage interventions would be.</p>
+        </div>
+      </div>
+
+      <div class="section-divider"></div>
+
+      <!-- RESEARCH GOALS -->
+      <div class="case-section">
+        <div class="section-eyebrow">Research Goals</div>
+        <h3>Three Questions to Guide the Strategy</h3>
+        <p>The study was designed to answer three core strategic questions:</p>
+
+        <div class="phase-grid">
+          <div class="phase-box">
+            <div class="phase-label">Funnel Mapping</div>
+            <p>Where do developers sit across awareness, consideration, and intent? What proportion of the addressable market is at each stage, and how large is the undecided segment?</p>
+          </div>
+          <div class="phase-box">
+            <div class="phase-label">Barrier Identification</div>
+            <p>What is preventing developers who are aware of the platform from moving forward? What specific concerns or beliefs slow down funnel conversion?</p>
+          </div>
+        </div>
+        <div class="phase-grid" style="margin-top:0">
+          <div class="phase-box" style="grid-column:1 / -1">
+            <div class="phase-label">Driver Identification</div>
+            <p>What factors — skills, SDK familiarity, value perceptions, community channels — are statistically associated with consideration and intent to build?</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-divider"></div>
+
+      <!-- METHODOLOGY -->
+      <div class="case-section">
+        <div class="section-eyebrow">Methodology</div>
+        <h3>A Quantitative Funnel Study Across Five Markets</h3>
+        <p>The study used an online survey distributed via email to a third-party sample of eligible developers — those who had launched Android apps (2D/3D), VR/MR apps, or content on UGC platforms. The geography was designed to capture both established and high-growth developer markets, spanning the US, Germany, India, Brazil, and Canada.</p>
+
+        <!-- Methodology accordion -->
+        <div class="accordion">
+          <button class="accordion-trigger" aria-expanded="false">
+            <div class="accordion-text">
+              <div class="accordion-label">Full study design and sample details</div>
+              <div class="accordion-sublabel">Sample, audience, geography, field period, distribution</div>
+            </div>
+            <div class="accordion-icon">+</div>
+          </button>
+          <div class="accordion-body">
+            <div class="accordion-body-inner">
+              <table class="detail-table">
+                <thead>
+                  <tr><th>Dimension</th><th>Detail</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td>Sample size</td><td>1,441 developers</td></tr>
+                  <tr><td>Audience</td><td>Developers who had launched Android (2D/3D), VR/MR, or UGC platform apps</td></tr>
+                  <tr><td>Markets</td><td>US, Germany, India, Brazil, Canada</td></tr>
+                  <tr><td>Field period</td><td>June 23 – August 25, 2025 (~2 months)</td></tr>
+                  <tr><td>Distribution</td><td>Email invitation via vendor using third-party survey platform</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <p style="margin-top:20px">Three analytical methods were combined to generate both descriptive and causal insight. Descriptive statistics and column proportion testing established the headline funnel metrics and identified statistically significant differences across subgroups. The most analytically intensive outputs came from a series of <strong>logistic regression models</strong> — one for consideration, one for intent — which isolated the independent statistical drivers of each funnel outcome while controlling for other factors.</p>
+
+        <div class="highlight-box">
+          <p>Using logistic regression rather than correlation analysis was a deliberate methodological choice. It allowed the team to move beyond "what's associated with intent?" to answer the more actionable question: "what independently drives intent, after accounting for everything else?" This is what makes the Odds Ratios interpretable and usable as prioritisation tools for marketing and product teams.</p>
+        </div>
+      </div>
+
+      <div class="section-divider"></div>
+
+      <!-- FINDINGS -->
+      <div class="case-section">
+        <div class="section-eyebrow">Findings</div>
+        <h3>A Leaky Funnel with a Mismatched Message</h3>
+        <p>The data revealed a funnel with substantial opportunity as well as a set of structural barriers that meant raw awareness spending alone would not drive growth. Several interlocking problems emerged.</p>
+
+        <!-- Finding 1: Awareness Gap -->
+        <h3 style="margin-top:32px">1 — The Awareness Gap</h3>
+        <p>Nearly six in ten developers had never heard of Horizon OS. At 42% overall awareness, the platform's addressable market was being meaningfully constrained before any consideration or intent dynamic even came into play. This wasn't a conversion problem or a messaging problem — it was a reach problem that had to be solved first.</p>
+
+        <!-- Funnel chart -->
+        <div class="chart-wrap">
+          <div class="chart-title">Developer funnel — addressable market to near-term intent</div>
+          <div class="funnel-chart">
+            <div class="funnel-row">
+              <div class="funnel-label">All developers</div>
+              <div class="funnel-track">
+                <div class="funnel-fill level-1" style="--w:100%;width:100%">100%</div>
+              </div>
+              <div class="funnel-pct">100%</div>
+            </div>
+            <div class="funnel-row">
+              <div class="funnel-label">Aware of Horizon OS</div>
+              <div class="funnel-track">
+                <div class="funnel-fill level-2" style="--w:42%;width:42%">42%</div>
+              </div>
+              <div class="funnel-pct">42%</div>
+            </div>
+            <div class="funnel-row">
+              <div class="funnel-label">Considering building</div>
+              <div class="funnel-track">
+                <div class="funnel-fill level-3" style="--w:25%;width:25%">~25%</div>
+              </div>
+              <div class="funnel-pct">~25%</div>
+            </div>
+            <div class="funnel-row">
+              <div class="funnel-label">Intent to build (near-term)</div>
+              <div class="funnel-track">
+                <div class="funnel-fill level-4" style="--w:8%;width:8%"></div>
+              </div>
+              <div class="funnel-pct">~8%</div>
+            </div>
+          </div>
+          <p class="funnel-note">Data directionally representative. Near-term intent = plans to start development within the next year.</p>
+        </div>
+
+        <!-- Finding 2: Undecided Middle -->
+        <h3 style="margin-top:32px">2 — The Undecided Middle</h3>
+        <p>Among developers who were aware, 60% expressed some level of consideration — a reasonably strong conversion rate. But the critical finding was in what happened next: only about a third of aware developers planned to start development within the next year. A full <strong>35% of aware developers sat in an undecided state</strong>. This undecided segment, not the rejectors, represented the most actionable opportunity.</p>
+
+        <div class="highlight-box">
+          <p>The undecided segment is the strategic priority. These developers are already aware, haven't dismissed the platform, but have not yet received a compelling enough reason to commit. Converting even a fraction of this group would represent a significant step-change in ecosystem growth.</p>
+        </div>
+
+        <!-- Finding 3: Wrong Conversation -->
+        <h3 style="margin-top:32px">3 — The Wrong Conversation</h3>
+        <p>The dominant adoption barriers were <strong>demand skepticism</strong> (46% worried about insufficient users or market traction) and <strong>perceived effort to build</strong>, rather than actual technical capability gaps. A misalignment between what marketing was emphasising and what developers actually cared about was compounding the problem.</p>
+
+        <div class="contrast-grid">
+          <div class="contrast-box">
+            <div class="contrast-label">What marketing emphasised</div>
+            <div class="contrast-item"><div class="contrast-dot"></div>Technical capabilities &amp; features</div>
+            <div class="contrast-item"><div class="contrast-dot"></div>SDK depth &amp; toolchain maturity</div>
+            <div class="contrast-item"><div class="contrast-dot"></div>Platform performance specs</div>
+            <div class="contrast-item"><div class="contrast-dot"></div>Developer tools &amp; APIs</div>
+          </div>
+          <div class="contrast-box emphasis">
+            <div class="contrast-label emphasis">What developers cared about</div>
+            <div class="contrast-item"><div class="contrast-dot emphasis"></div>ROI &amp; monetisation potential</div>
+            <div class="contrast-item"><div class="contrast-dot emphasis"></div>Market size &amp; audience reach</div>
+            <div class="contrast-item"><div class="contrast-dot emphasis"></div>Funding &amp; investment access</div>
+            <div class="contrast-item"><div class="contrast-dot emphasis"></div>Ease of porting existing apps</div>
+          </div>
+        </div>
+
+        <!-- Finding 4: Regression results -->
+        <h3 style="margin-top:32px">4 — What Actually Moves the Needle</h3>
+        <p>The logistic regression models produced the most actionable outputs of the study, identifying the independent statistical drivers of each funnel stage. The results gave marketing and product teams a clear, ranked set of levers to act on.</p>
+
+        <div class="chart-wrap">
+          <div class="chart-title">Independent drivers of funnel progression (Odds Ratios from logistic regression)</div>
+          <div class="or-section-label">Drivers of Consideration (Awareness → Consideration)</div>
+          <div class="or-chart">
+            <div class="or-row">
+              <div class="or-label">Meta Spatial SDK familiarity</div>
+              <div class="or-track"><div class="or-fill medium" style="width:38%">OR 1.5×</div></div>
+              <div class="or-val">1.5×</div>
+            </div>
+            <div class="or-row">
+              <div class="or-label">Unity skills</div>
+              <div class="or-track"><div class="or-fill light" style="width:28%"></div></div>
+              <div class="or-val">sig.</div>
+            </div>
+          </div>
+          <div class="or-section-label">Drivers of Intent (Consideration → Commitment)</div>
+          <div class="or-chart">
+            <div class="or-row">
+              <div class="or-label">Access to funding &amp; investment</div>
+              <div class="or-track"><div class="or-fill strong" style="width:78%">OR ~3×</div></div>
+              <div class="or-val">~3×</div>
+            </div>
+            <div class="or-row">
+              <div class="or-label">Monetisation &amp; porting value prop</div>
+              <div class="or-track"><div class="or-fill medium" style="width:55%">OR ~2×</div></div>
+              <div class="or-val">~2×</div>
+            </div>
+          </div>
+          <p class="funnel-note">Bar lengths are proportional to effect size. Data directionally representative.</p>
+        </div>
+
+        <!-- Finding 5: Geographic Signal -->
+        <h3 style="margin-top:32px">5 — Geographic Signal</h3>
+        <p>Developers in <strong>India and Brazil</strong> showed dramatically higher near-term development intent compared to US and Canadian counterparts — a country-level odds ratio of approximately 5 in the regression model. This was one of the strongest signals in the entire dataset, suggesting these markets represented disproportionate near-term growth opportunity if targeted appropriately.</p>
+
+        <!-- Finding 6: Mobile Dev Blind Spot -->
+        <h3 style="margin-top:32px">6 — The Mobile Developer Blind Spot</h3>
+        <p>Mobile developers were identified as a high-value, underleveraged segment. They have existing Android skills that transfer directly to Horizon development, and app porting represents a low-effort path to entering the ecosystem. Yet mobile developers had the <strong>lowest awareness of the porting option</strong>, with nearly 60% unaware — meaning the most natural acquisition pathway was being systematically undersold.</p>
+
+        <ul class="findings-list">
+          <li><span class="find-icon">📱</span><span>Mobile developers have directly transferable Android skills — making them a low-friction entry point for ecosystem growth</span></li>
+          <li><span class="find-icon">🔍</span><span>~60% of mobile developers were unaware that porting their existing app was even an option</span></li>
+          <li><span class="find-icon">💡</span><span>No dedicated messaging or acquisition pathway existed for this segment at the time of the study</span></li>
+        </ul>
+      </div>
+
+      <div class="section-divider"></div>
+
+      <!-- RECOMMENDATIONS -->
+      <div class="case-section">
+        <div class="section-eyebrow">Recommendations</div>
+        <h3>Two Strategic Imperatives</h3>
+        <p>The data converged on two clear, sequenced priorities — each grounded directly in the regression findings.</p>
+
+        <div class="phase-grid">
+          <div class="phase-box">
+            <div class="phase-label">Recommendation 1</div>
+            <p><strong>Turn Awareness into Action: Lead with Profit, Provide the Proof.</strong> The regression showed that funding access and monetisation clarity were the two strongest drivers of intent, but current messaging was not leading with this. The recommendation was a GTM pivot: answer the business case first, before addressing technical capability.</p>
+          </div>
+          <div class="phase-box">
+            <div class="phase-label">Recommendation 2</div>
+            <p><strong>Activate Mobile Devs to Port: Establish the Opportunity, Emphasise the Ease.</strong> A dedicated acquisition strategy for mobile developers built around a clear value proposition: <em>"Generate incremental revenue from a new market with your existing app."</em></p>
+          </div>
+        </div>
+
+        <!-- Rec 1 detail accordion -->
+        <div class="accordion">
+          <button class="accordion-trigger" aria-expanded="false">
+            <div class="accordion-text">
+              <div class="accordion-label">Recommendation 1 — detail and rationale</div>
+              <div class="accordion-sublabel">Messaging shift, proof points, developer portal, trusted voices</div>
+            </div>
+            <div class="accordion-icon">+</div>
+          </button>
+          <div class="accordion-body">
+            <div class="accordion-body-inner">
+              <p>The regression finding that funding access (OR ~3×) and monetisation clarity (OR ~2×) were the two strongest drivers of intent had a direct implication for marketing: the current over-index on technical features was leaving the most persuasive arguments unmade. The GTM pivot needed to answer four questions that undecided developers were asking:</p>
+              <ul class="findings-list" style="margin-top:12px">
+                <li><span class="find-icon">💰</span><span><strong>Can I make money?</strong> — Showcase developer success stories and monetisation outcomes prominently in outreach</span></li>
+                <li><span class="find-icon">📈</span><span><strong>Is there a real market?</strong> — Publish platform traction reports to directly address demand skepticism (the #1 stated barrier)</span></li>
+                <li><span class="find-icon">🏦</span><span><strong>Can I access support?</strong> — Make funding and incentive programmes highly visible and easy to apply for</span></li>
+                <li><span class="find-icon">🚀</span><span><strong>Is it worth the effort?</strong> — Streamline onboarding; mobilise trusted technical voices (Android/Kotlin ecosystem figures) to demystify migration</span></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- Rec 2 detail accordion -->
+        <div class="accordion">
+          <button class="accordion-trigger" aria-expanded="false">
+            <div class="accordion-text">
+              <div class="accordion-label">Recommendation 2 — detail and rationale</div>
+              <div class="accordion-sublabel">Mobile developer value prop, porting case studies, community channels</div>
+            </div>
+            <div class="accordion-icon">+</div>
+          </button>
+          <div class="accordion-body">
+            <div class="accordion-body-inner">
+              <p>Mobile developers are a large, skills-compatible, and currently underserved segment with a clear path to entering the ecosystem. The challenge was not capability — it was awareness and perceived effort. The recommendation required a purpose-built acquisition strategy:</p>
+              <table class="detail-table" style="margin-top:12px">
+                <thead>
+                  <tr><th>Action</th><th>Rationale</th></tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Porting case studies</td>
+                    <td>Commission and publish case studies that explicitly state the percentage of code change required. Low effort should be the centrepiece of the argument — not a footnote.</td>
+                  </tr>
+                  <tr>
+                    <td>Interactive porting guides</td>
+                    <td>Create step-by-step tooling that lets mobile developers estimate effort before committing — reducing the perceived risk of exploring the platform.</td>
+                  </tr>
+                  <tr>
+                    <td>Targeted community outreach</td>
+                    <td>Invest in campaigns targeting mobile developer communities on forums, YouTube, and blogs — the channels developers cited as most trusted for platform discovery.</td>
+                  </tr>
+                </tbody>
+              </table>
+              <div class="analysis-note" style="margin-top:16px">
+                <p><strong>On channel strategy:</strong> The study found that developers primarily learn about platforms through community-driven channels — YouTube, online forums, and blogs. Prioritising these over paid media was a direct implication of the data, not a default assumption.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /content-card -->
+
+    <p style="margin-top:20px;font-size:0.8rem;color:var(--text-3);font-style:italic;">Note: Due to confidentiality constraints, all data, percentages, diagrams, and visualizations are directionally representative, not exact reproductions.</p>
+
+  </main>
+
+  <script>
+    // Accordion
+    document.querySelectorAll('.accordion-trigger').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const expanded = btn.getAttribute('aria-expanded') === 'true';
+        btn.setAttribute('aria-expanded', !expanded);
+        const body = btn.nextElementSibling;
+        body.style.maxHeight = expanded ? '0' : body.scrollHeight + 'px';
+      });
+    });
+
+    // Mobile nav
+    const hamburger = document.querySelector('.hamburger');
+    const sidebar   = document.getElementById('sidebar');
+    const backdrop  = document.querySelector('.nav-backdrop');
+    function setOpen(open) {
+      hamburger.classList.toggle('open', open);
+      hamburger.setAttribute('aria-expanded', open);
+      sidebar.classList.toggle('open', open);
+      backdrop.classList.toggle('visible', open);
+    }
+    hamburger.addEventListener('click', () => setOpen(!sidebar.classList.contains('open')));
+    backdrop.addEventListener('click', () => setOpen(false));
+    sidebar.querySelectorAll('a').forEach(a => a.addEventListener('click', () => setOpen(false)));
+  </script>
+</body>
+</html>
