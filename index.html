@@ -623,9 +623,101 @@
       .skill-tags { gap: 6px; }
       .skill-tag { font-size: 0.7rem; }
     }
+    /* ── PASSWORD GATE ───────────────────────────────── */
+    #pw-gate {
+      position: fixed;
+      inset: 0;
+      background: var(--bg);
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    #pw-gate .gate-card {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 48px 40px;
+      width: 100%;
+      max-width: 380px;
+      text-align: center;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+    }
+    #pw-gate .gate-name {
+      font-family: var(--serif);
+      font-size: 1.5rem;
+      color: var(--text-1);
+      margin-bottom: 6px;
+    }
+    #pw-gate .gate-sub {
+      font-size: 0.8rem;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-3);
+      margin-bottom: 32px;
+    }
+    #pw-gate label {
+      display: block;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-2);
+      margin-bottom: 10px;
+      text-align: left;
+    }
+    #pw-gate input[type="password"] {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-family: var(--sans);
+      font-size: 0.9rem;
+      color: var(--text-1);
+      background: var(--bg);
+      outline: none;
+      transition: border-color var(--transition);
+      margin-bottom: 16px;
+    }
+    #pw-gate input[type="password"]:focus {
+      border-color: var(--accent);
+    }
+    #pw-gate button {
+      width: 100%;
+      padding: 11px;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-family: var(--sans);
+      font-size: 0.875rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: opacity var(--transition);
+    }
+    #pw-gate button:hover { opacity: 0.88; }
+    #pw-gate .gate-error {
+      font-size: 0.8rem;
+      color: #DC2626;
+      margin-top: 10px;
+      min-height: 1.2em;
+    }
   </style>
 </head>
 <body>
+
+  <!-- Password gate overlay -->
+  <div id="pw-gate">
+    <div class="gate-card">
+      <div class="gate-name">Bryan Carroll</div>
+      <div class="gate-sub">User Research &amp; Insights</div>
+      <label for="pw-input">Password</label>
+      <input type="password" id="pw-input" placeholder="Enter password" autocomplete="current-password" />
+      <button id="pw-submit">View Portfolio</button>
+      <div class="gate-error" id="pw-error"></div>
+    </div>
+  </div>
 
   <!-- Mobile top bar (hamburger lives here on small screens) -->
   <div class="mobile-topbar">
@@ -1081,6 +1173,43 @@
         }
       });
     }, { rootMargin: '-30% 0px -60% 0px' });
+
+    // ── Password gate ─────────────────────────────────
+    (function () {
+      const gate    = document.getElementById('pw-gate');
+      const input   = document.getElementById('pw-input');
+      const btn     = document.getElementById('pw-submit');
+      const errMsg  = document.getElementById('pw-error');
+      const CORRECT = 'userresearch';
+      const SESSION_KEY = 'portfolio_unlocked';
+
+      // Already unlocked this session — skip the gate entirely
+      if (sessionStorage.getItem(SESSION_KEY) === '1') {
+        gate.style.display = 'none';
+        return;
+      }
+
+      function attempt() {
+        if (input.value === CORRECT) {
+          sessionStorage.setItem(SESSION_KEY, '1');
+          gate.style.display = 'none';
+          document.body.style.overflow = '';
+        } else {
+          errMsg.textContent = 'Incorrect password. Please try again.';
+          input.value = '';
+          input.focus();
+        }
+      }
+
+      btn.addEventListener('click', attempt);
+      input.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter') attempt();
+        errMsg.textContent = '';
+      });
+
+      document.body.style.overflow = 'hidden';
+      input.focus();
+    })();
 
     sections.forEach(s => observer.observe(s));
 
