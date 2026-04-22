@@ -418,9 +418,112 @@
       .accordion-body-inner { overflow-x: auto; }
       .detail-table { min-width: 480px; }
     }
+
+    /* ── PASSWORD GATE ───────────────────────────────── */
+    #pw-gate {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.45);
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    #pw-gate .gate-card {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 48px 40px;
+      width: 100%;
+      max-width: 400px;
+      text-align: center;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.14);
+    }
+    .gate-lock-icon {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+    .gate-title {
+      font-family: var(--serif);
+      font-size: 1.4rem;
+      color: var(--text-1);
+      margin-bottom: 12px;
+    }
+    .gate-body-text {
+      font-size: 0.875rem;
+      color: var(--text-2);
+      line-height: 1.65;
+      margin-bottom: 28px;
+    }
+    #pw-gate label {
+      display: block;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-2);
+      margin-bottom: 10px;
+      text-align: left;
+    }
+    #pw-gate input[type="password"] {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-family: var(--sans);
+      font-size: 0.9rem;
+      color: var(--text-1);
+      background: var(--bg);
+      outline: none;
+      transition: border-color var(--transition);
+      margin-bottom: 16px;
+    }
+    #pw-gate input[type="password"]:focus {
+      border-color: var(--accent);
+    }
+    #pw-gate button {
+      width: 100%;
+      padding: 11px;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-family: var(--sans);
+      font-size: 0.875rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: opacity var(--transition);
+    }
+    #pw-gate button:hover { opacity: 0.88; }
+    #pw-gate .gate-error {
+      font-size: 0.8rem;
+      color: #DC2626;
+      margin-top: 10px;
+      min-height: 1.2em;
+    }
   </style>
 </head>
 <body>
+
+  <!-- Password gate -->
+  <div id="pw-gate" role="dialog" aria-modal="true" aria-labelledby="pw-gate-title">
+    <div class="gate-card">
+      <div class="gate-lock-icon">
+        <svg width="44" height="44" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <rect x="4.5" y="10.5" width="15" height="11" rx="2" fill="#1D4ED8"/>
+          <path d="M8 10.5V7a4 4 0 0 1 8 0v3.5" stroke="#1D4ED8" stroke-width="2" stroke-linecap="round"/>
+          <circle cx="12" cy="16" r="1.5" fill="#fff"/>
+        </svg>
+      </div>
+      <div class="gate-title" id="pw-gate-title">This case study is protected</div>
+      <div class="gate-body-text">This content is shared selectively with recruiters and hiring managers. Please enter the password to continue.</div>
+      <label for="pw-input">Password</label>
+      <input type="password" id="pw-input" placeholder="Enter password" autocomplete="current-password" />
+      <button id="pw-submit">Continue</button>
+      <div class="gate-error" id="pw-error"></div>
+    </div>
+  </div>
 
   <!-- Mobile top bar -->
   <div class="mobile-topbar">
@@ -863,6 +966,45 @@
         a.addEventListener('click', () => { if (window.innerWidth <= 768) setOpen(false); })
       );
     })();
+
+    // ── Password gate ─────────────────────────────────
+    (function () {
+      const gate    = document.getElementById('pw-gate');
+      const input   = document.getElementById('pw-input');
+      const btn     = document.getElementById('pw-submit');
+      const errMsg  = document.getElementById('pw-error');
+      const CORRECT     = 'userresearch';
+      const SESSION_KEY = 'portfolio_unlocked';
+
+      // Already unlocked this session — show content immediately
+      if (sessionStorage.getItem(SESSION_KEY) === '1') {
+        gate.style.display = 'none';
+        return;
+      }
+
+      // Block page and show gate
+      document.body.style.overflow = 'hidden';
+      setTimeout(function () { input.focus(); }, 50);
+
+      function attempt() {
+        if (input.value === CORRECT) {
+          sessionStorage.setItem(SESSION_KEY, '1');
+          gate.style.display = 'none';
+          document.body.style.overflow = '';
+        } else {
+          errMsg.textContent = 'Incorrect password. Please try again.';
+          input.value = '';
+          input.focus();
+        }
+      }
+
+      btn.addEventListener('click', attempt);
+      input.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter') attempt();
+        if (e.key !== 'Enter') errMsg.textContent = '';
+      });
+    })();
+
   </script>
 
 </body>
