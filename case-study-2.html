@@ -6,7 +6,7 @@
   <title>Integrity Measurement — Bryan Carroll</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=DM+Serif+Display&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&amp;family=DM+Sans:wght@400;500;600;700&amp;family=Roboto+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -483,8 +483,10 @@
       min-height: 1.2em;
     }
   </style>
+  <link rel="stylesheet" href="site.css" />
+  <script src="site.js" defer></script>
 </head>
-<body>
+<body class="case-page">
 
   <!-- Password gate -->
   <div id="pw-gate" role="dialog" aria-modal="true" aria-labelledby="pw-gate-title">
@@ -506,22 +508,43 @@
   </div>
 
   <!-- Mobile top bar -->
-  <div class="mobile-topbar">
-    <button class="hamburger" aria-label="Open navigation" aria-expanded="false">
+  <a class="skip-link" href="#main-content">Skip to content</a>
+  <header class="site-header">
+    <a class="site-brand" href="index.html" aria-label="Bryan Carroll, home">
+      <span class="brand-mark" aria-hidden="true">BC</span>
+      <span><span class="brand-name">Bryan Carroll</span><span class="brand-role">User Research &amp; Insights</span></span>
+    </a>
+    <nav class="desktop-nav" aria-label="Main navigation">
+      <details class="work-menu">
+        <summary>Work</summary>
+        <ul class="work-dropdown">
+          <li><a href="index.html#work">All case studies</a></li>
+          <li><a href="case-study-1.html">Business Verification</a></li>
+          <li><a href="case-study-2.html" aria-current="page">Integrity Measurement</a></li>
+          <li><a href="case-study-3.html">NetzDG Reporting</a></li>
+          <li><a href="case-study-4.html">Developer ROI</a></li>
+          <li><a href="case-study-5.html">Developer Funnel</a></li>
+        </ul>
+      </details>
+      <a href="index.html#about">About me</a>
+      <a href="index.html#resume">Résumé</a>
+      <a class="nav-contact" href="index.html#contact">Contact ↗</a>
+    </nav>
+    <button class="hamburger" aria-label="Open navigation" aria-expanded="false" aria-controls="sidebar">
       <span></span><span></span><span></span>
     </button>
-    <span class="mobile-topbar-name">Bryan Carroll</span>
-  </div>
-  <div class="nav-backdrop"></div>
+  </header>
+  <div class="nav-backdrop" aria-hidden="true"></div>
 
 
-  <nav id="sidebar">
+  <nav id="sidebar" aria-label="Mobile navigation" inert>
     <div class="nav-identity">
       <a href="index.html" style="font-family:var(--serif);font-size:1.25rem;color:var(--text-1);text-decoration:none;line-height:1.2;display:block;">Bryan Carroll</a>
       <div class="role">User Research & Insights</div>
     </div>
     <div class="nav-section-label">Work</div>
     <ul class="nav-links">
+      <li><a href="index.html#work">All case studies</a></li>
       <li><a href="case-study-1.html">Business Verification</a></li>
       <li><a href="case-study-2.html" class="active">Integrity Measurement</a></li>
       <li><a href="case-study-3.html">NetzDG Reporting</a></li>
@@ -540,14 +563,14 @@
     </div>
   </nav>
 
-  <main>
+  <main id="main-content" tabindex="-1">
     <a class="back-link" href="index.html">← Back to work</a>
 
     <!-- HERO -->
     <div class="case-hero">
       <div>
         <span class="company-tag">Meta · Trust &amp; Safety</span>
-        <h2>User-Centric Measurement<br>for Meta Integrity</h2>
+        <h1>User-Centric Measurement<br>for Meta Integrity</h1>
         <p style="font-size:0.9rem;color:var(--text-2);line-height:1.65;max-width:420px">Identified a misaligned north star metric, built the business case for change, and designed an end-to-end measurement programme — shifting an entire team's product strategy.</p>
         <div class="method-pills">
           <span class="method-pill">Factor Analysis (EFA)</span>
@@ -602,7 +625,7 @@
       <div class="section-divider"></div>
 
       <!-- BUILDING THE CASE -->
-      <div class="case-section">
+      <div class="case-section section-tint">
         <div class="section-eyebrow">Business Case</div>
         <h3>Connecting User Dissatisfaction to Business Goals</h3>
         <p>User dissatisfaction alone wasn't enough to convince the PM to change the metric. I needed to translate the qualitative signal into a business impact that leadership could act on.</p>
@@ -759,7 +782,7 @@
       <div class="section-divider"></div>
 
       <!-- FACTOR STRUCTURE -->
-      <div class="case-section">
+      <div class="case-section section-tint">
         <div class="section-eyebrow">Findings</div>
         <h3>Factor Structure: Three Dimensions of "Supportiveness"</h3>
         <p>EFA identified 4 factors. After excluding Satisfaction (which was almost perfectly predicted by report outcome, making it outside the team's control), the remaining three became the core sentiment measure.</p>
@@ -846,7 +869,7 @@
       <div class="section-divider"></div>
 
       <!-- PILOT -->
-      <div class="case-section">
+      <div class="case-section section-tint">
         <div class="section-eyebrow">Validation</div>
         <h3>In-Product Pilot Experiment</h3>
         <p>Before recommending the team adopt the sentiment measure as their north star, I needed to demonstrate that the survey could actually detect meaningful product changes. I designed a pilot experiment to do this.</p>
@@ -908,7 +931,7 @@
       <div class="section-divider"></div>
 
       <!-- IMPACT -->
-      <div class="case-section">
+      <div class="case-section section-tint">
         <div class="section-eyebrow">Impact</div>
         <h3>How a New Metric Changed Product Strategy</h3>
         <p>The shift from PSOs to Supportiveness changed not just the number on a dashboard — it changed what the team built. With PSOs as the goal, discoverability of existing tools was the primary lever. With Supportiveness, the question became: <em>does this make people feel genuinely supported?</em></p>
@@ -966,6 +989,13 @@
 
 
         </div><!-- /content-card -->
+    <a class="case-next" href="case-study-3.html">
+      <span>
+        <span class="case-next-label">Next case study</span>
+        <span class="case-next-title">NetzDG Reporting ↗</span>
+      </span>
+      <span class="next-arrow" aria-hidden="true">↗</span>
+    </a>
   </main>
 
   <script>
@@ -978,29 +1008,7 @@
       });
     });
 
-    // ── Mobile hamburger ──────────────────────────────
-    (function () {
-      const btn      = document.querySelector('.hamburger');
-      const sidebar  = document.getElementById('sidebar');
-      const backdrop = document.querySelector('.nav-backdrop');
-      if (!btn) return;
 
-      function setOpen(open) {
-        btn.setAttribute('aria-expanded', open);
-        btn.classList.toggle('open', open);
-        sidebar.classList.toggle('open', open);
-        backdrop.classList.toggle('visible', open);
-        document.body.style.overflow = open ? 'hidden' : '';
-      }
-
-      btn.addEventListener('click', () => setOpen(!sidebar.classList.contains('open')));
-      backdrop.addEventListener('click', () => setOpen(false));
-
-      // Close on any nav link click (mobile)
-      sidebar.querySelectorAll('a').forEach(a =>
-        a.addEventListener('click', () => { if (window.innerWidth <= 768) setOpen(false); })
-      );
-    })();
 
     // ── Password gate ─────────────────────────────────
     (function () {

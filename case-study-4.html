@@ -6,7 +6,7 @@
   <title>Developer ROI Benchmarking — Bryan Carroll</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=DM+Serif+Display&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&amp;family=DM+Sans:wght@400;500;600;700&amp;family=Roboto+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -459,8 +459,10 @@
       min-height: 1.2em;
     }
   </style>
+  <link rel="stylesheet" href="site.css" />
+  <script src="site.js" defer></script>
 </head>
-<body>
+<body class="case-page">
 
   <!-- Password gate -->
   <div id="pw-gate" role="dialog" aria-modal="true" aria-labelledby="pw-gate-title">
@@ -482,21 +484,42 @@
   </div>
 
   <!-- Mobile top bar -->
-  <div class="mobile-topbar">
-    <button class="hamburger" aria-label="Open navigation" aria-expanded="false">
+  <a class="skip-link" href="#main-content">Skip to content</a>
+  <header class="site-header">
+    <a class="site-brand" href="index.html" aria-label="Bryan Carroll, home">
+      <span class="brand-mark" aria-hidden="true">BC</span>
+      <span><span class="brand-name">Bryan Carroll</span><span class="brand-role">User Research &amp; Insights</span></span>
+    </a>
+    <nav class="desktop-nav" aria-label="Main navigation">
+      <details class="work-menu">
+        <summary>Work</summary>
+        <ul class="work-dropdown">
+          <li><a href="index.html#work">All case studies</a></li>
+          <li><a href="case-study-1.html">Business Verification</a></li>
+          <li><a href="case-study-2.html">Integrity Measurement</a></li>
+          <li><a href="case-study-3.html">NetzDG Reporting</a></li>
+          <li><a href="case-study-4.html" aria-current="page">Developer ROI</a></li>
+          <li><a href="case-study-5.html">Developer Funnel</a></li>
+        </ul>
+      </details>
+      <a href="index.html#about">About me</a>
+      <a href="index.html#resume">Résumé</a>
+      <a class="nav-contact" href="index.html#contact">Contact ↗</a>
+    </nav>
+    <button class="hamburger" aria-label="Open navigation" aria-expanded="false" aria-controls="sidebar">
       <span></span><span></span><span></span>
     </button>
-    <span class="mobile-topbar-name">Bryan Carroll</span>
-  </div>
-  <div class="nav-backdrop"></div>
+  </header>
+  <div class="nav-backdrop" aria-hidden="true"></div>
 
-  <nav id="sidebar">
+  <nav id="sidebar" aria-label="Mobile navigation" inert>
     <div class="nav-identity">
       <a href="index.html" style="font-family:var(--serif);font-size:1.25rem;color:var(--text-1);text-decoration:none;line-height:1.2;display:block;">Bryan Carroll</a>
       <div class="role">User Research &amp; Insights</div>
     </div>
     <div class="nav-section-label">Work</div>
     <ul class="nav-links">
+      <li><a href="index.html#work">All case studies</a></li>
       <li><a href="case-study-1.html">Business Verification</a></li>
       <li><a href="case-study-2.html">Integrity Measurement</a></li>
       <li><a href="case-study-3.html">NetzDG Reporting</a></li>
@@ -515,14 +538,14 @@
     </div>
   </nav>
 
-  <main>
+  <main id="main-content" tabindex="-1">
     <a class="back-link" href="index.html">← Back to work</a>
 
     <!-- HERO -->
     <div class="case-hero">
       <div>
         <span class="company-tag">Meta · Reality Labs · 2025</span>
-        <h2>Developer ROI<br>Benchmarking</h2>
+        <h1>Developer ROI<br>Benchmarking</h1>
         <p style="font-size:0.9rem;color:var(--text-2);line-height:1.65;max-width:420px">A multi-phase programme to understand developer economics on the Horizon platform — from building the data collection infrastructure to running a competitive benchmark study across five major platforms.</p>
         <div class="method-pills">
           <span class="method-pill">Survey Design</span>
@@ -598,7 +621,7 @@
       <div class="section-divider"></div>
 
       <!-- MY ROLE -->
-      <div class="case-section">
+      <div class="case-section section-tint">
         <div class="section-eyebrow">My Role</div>
         <h3>Bridging Data, Research, and Product</h3>
         <p>This work spanned two distinct but connected workstreams. I drove the strategic framing and cross-functional execution of both — from building the data infrastructure to scoping and overseeing the competitive research.</p>
@@ -723,7 +746,7 @@
       <div class="section-divider"></div>
 
       <!-- PHASE 2: MARKET RESEARCH -->
-      <div class="case-section">
+      <div class="case-section section-tint">
         <div class="section-eyebrow">Phase 2 — Competitive Benchmark Study</div>
         <h3>Putting Horizon in Context</h3>
         <p>Once internal data showed most Horizon developers weren't breaking even, the next question was: <em>is this a Meta problem, or an industry-wide problem?</em> Understanding the competitive context was essential before designing any solution. I scoped and supported a market research study to answer this question.</p>
@@ -924,7 +947,7 @@
       <div class="section-divider"></div>
 
       <!-- RECOMMENDATIONS -->
-      <div class="case-section">
+      <div class="case-section section-tint">
         <div class="section-eyebrow">Recommendations</div>
         <h3>Two Strategic Pivots</h3>
         <p>The findings pointed clearly toward two areas where Meta could have the highest leverage — one structural, one tied to how the existing funding programme was being deployed.</p>
@@ -974,6 +997,13 @@
 
     </div><!-- /content-card -->
 
+    <a class="case-next" href="case-study-5.html">
+      <span>
+        <span class="case-next-label">Next case study</span>
+        <span class="case-next-title">Developer Funnel ↗</span>
+      </span>
+      <span class="next-arrow" aria-hidden="true">↗</span>
+    </a>
   </main>
 
   <script>
@@ -990,28 +1020,7 @@
       });
     });
 
-    // ── Mobile hamburger ──────────────────────────────
-    (function () {
-      const btn      = document.querySelector('.hamburger');
-      const sidebar  = document.getElementById('sidebar');
-      const backdrop = document.querySelector('.nav-backdrop');
-      if (!btn) return;
 
-      function setOpen(open) {
-        btn.setAttribute('aria-expanded', open);
-        btn.classList.toggle('open', open);
-        sidebar.classList.toggle('open', open);
-        backdrop.classList.toggle('visible', open);
-        document.body.style.overflow = open ? 'hidden' : '';
-      }
-
-      btn.addEventListener('click', () => setOpen(!sidebar.classList.contains('open')));
-      backdrop.addEventListener('click', () => setOpen(false));
-
-      sidebar.querySelectorAll('a').forEach(a =>
-        a.addEventListener('click', () => { if (window.innerWidth <= 768) setOpen(false); })
-      );
-    })();
 
     // ── Password gate ─────────────────────────────────
     (function () {
